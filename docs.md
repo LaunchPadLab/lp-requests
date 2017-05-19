@@ -2,9 +2,41 @@
 
 ### Table of Contents
 
+-   [api](#api)
 -   [http](#http)
 -   [HttpError](#httperror)
--   [api](#api)
+
+## api
+
+A lightweight wrapper around the [http](http) module.
+Provides functions to make API requests with specified HTTP methods.
+
+The functions are as follows:
+
+-   `get(url, options)` sends a `'GET'` request
+-   `patch(url, body, options)` sends a `'PATCH'` request
+-   `post(url, body, options)` sends a `'POST'` request
+-   `put(url, body, options)` sends a `'PUT'` request
+-   `destroy(url, body, options)` sends a `'DELETE'` request
+-   `call(url, method, body, options)` sends a request with specified method
+
+Each function can be passed an `options` object, which will eventually be forwarded
+to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+
+Each function returns a promise, which will either resolve with a response object
+or reject with an [HTTPError](HTTPError).
+
+**Examples**
+
+```javascript
+function getUsers () {
+  return api.get('/users', { credentials: 'include' })
+}
+
+getUsers()
+   .then(res => console.log('The users are', res))
+   .catch(err => console.log('An error occurred!', err))
+```
 
 ## http
 
@@ -80,36 +112,4 @@ console.log(MyError.toString()) // "HttpError: 500 - Something went wrong"
 
 // Instantiated by http module
 http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
-```
-
-## api
-
-A lightweight wrapper around the [http](http) module.
-Provides functions to make API requests with specified HTTP methods.
-
-The functions are as follows:
-
--   `get(url, options)` sends a `'GET'` request
--   `patch(url, body, options)` sends a `'PATCH'` request
--   `post(url, body, options)` sends a `'POST'` request
--   `put(url, body, options)` sends a `'PUT'` request
--   `destroy(url, body, options)` sends a `'DELETE'` request
--   `call(url, method, body, options)` sends a request with specified method
-
-Each function can be passed an `options` object, which will eventually be forwarded
-to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
-
-Each function returns a promise, which will either resolve with a response object
-or reject with an [HTTPError](HTTPError).
-
-**Examples**
-
-```javascript
-function getUsers () {
-  return api.get('/users', { credentials: 'include' })
-}
-
-getUsers()
-   .then(res => console.log('The users are', res))
-   .catch(err => console.log('An error occurred!', err))
 ```

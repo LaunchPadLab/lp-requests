@@ -10,7 +10,6 @@ export { default as unset } from 'lodash/fp/unset'
 export { default as compose } from 'lodash/fp/compose'
 export { default as union } from 'lodash/union'
 
-
 // A wrapper around the humps library
 // Converts all keys of the given object to camelCase
 // EXCEPT keys that begin with an underscore to

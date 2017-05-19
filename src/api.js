@@ -33,32 +33,33 @@ import http from './http'
  *    .catch(err => console.log('An error occurred!', err))
  */
 
-function requestWithMethod (url, body, opts, method) {
-  return http(url, { ...opts, body, method })
+export function api (defaults={}) {
+
+  function requestWithMethod (url, body, opts, method) {
+    return http(url, { ...defaults, ...opts, body, method })
+  }
+
+  return {
+    get (url, opts={}) {
+      const body = null
+      return requestWithMethod(url, body, opts, 'GET')
+    },
+    patch (url, body, opts={}) {
+      return requestWithMethod(url, body, opts, 'PATCH')
+    },
+    post (url, body, opts={}) {
+      return requestWithMethod(url, body, opts, 'POST')
+    },
+    put (url, body, opts={}) {
+      return requestWithMethod(url, body, opts, 'PUT')
+    },
+    destroy (url, body, opts={}) {
+      return requestWithMethod(url, body, opts, 'DELETE')
+    },
+    call (url, method, body, opts={}) {
+      return requestWithMethod(url, body, opts, method)
+    },
+  }
 }
 
-export function get(url, opts = {}) {
-  const body = null
-  return requestWithMethod(url, body, opts, 'GET')
-}
-
-export function patch(url, body, opts = {}) {
-  return requestWithMethod(url, body, opts, 'PATCH')
-}
-
-export function post(url, body, opts = {}) {
-  return requestWithMethod(url, body, opts, 'POST')
-}
-
-export function put(url, body, opts = {}) {
-  return requestWithMethod(url, body, opts, 'PUT')
-}
-
-export function destroy(url, body, opts = {}) {
-  return requestWithMethod(url, body, opts, 'DELETE')
-}
-
-export function call(url, method, body, opts = {}) {
-  return requestWithMethod(url, body, opts, method)
-}
-
+export default api()

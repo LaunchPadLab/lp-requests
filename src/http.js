@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { getToken } from './csrf'
+import { isTokenMethod, getToken } from './csrf'
 import { camelizeKeys, decamelizeKeys, omitUndefined } from './utils'
 import HttpError from './http-error'
 import url from 'url'
@@ -47,29 +47,31 @@ import url from 'url'
  *    .catch(err => console.log('An error occurred!', err))
  */
 
-export const DEFAULT_HEADERS = {
-  'Accept': 'application/json',
-  'X-Requested-With': 'XMLHttpRequest',
-  'Content-Type': 'application/json',
-}
-
 const DEFAULT_OPTIONS = {
   credentials: 'same-origin',
   mode: 'same-origin',
+  headers: {
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+  }
 }
 
-export default function http (endpoint, { root='', csrf=true, headers, ...options }) {
+function http (endpoint, { root='', csrf=true, csrfToken, getCsrfToken, headers, ...options }) {
 
   const config = omitUndefined({
     ...DEFAULT_OPTIONS,
-    headers: { ...DEFAULT_HEADERS, ...headers },
+    headers: { ...DEFAULT_OPTIONS.headers, ...headers },
     ...options
   })
 
   if (config.body) config.body = JSON.stringify(decamelizeKeys(config.body))
 
-  const csrfToken = getToken(csrf, config.method)
-  if (csrfToken) config.headers['X-CSRF-Token'] = csrfToken
+  // Include token if necessary
+  if (isTokenMethod(config.method)) {
+    const token = csrfToken || getCsrfToken ? getCsrfToken() : getToken(csrf)
+    if (token) config.headers = { ...config.headers, 'X-CSRF-Token': token }
+  }
 
   // Build full URL
   const endpointUrl = url.resolve(root, endpoint)
@@ -83,3 +85,5 @@ export default function http (endpoint, { root='', csrf=true, headers, ...option
       })
     )
 }
+
+export default http
