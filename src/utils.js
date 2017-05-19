@@ -1,8 +1,6 @@
 import humps from 'humps'
 import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
-import attempt from 'lodash/attempt'
-import isError from 'lodash/isError'
 
 export { default as get } from 'lodash/fp/get'
 export { default as set } from 'lodash/fp/set'
@@ -32,12 +30,5 @@ export function decamelizeKeys (obj) {
 // with all keys with undefined values removed
 export function omitUndefined (obj) {
   return omitBy(obj, isUndefined)
-}
-
-// Parses an object from a string and returns the result
-// Returns undefined if there's a parsing error
-export function parseObject (str) {
-  const parsedObj = attempt(() => JSON.parse(str))
-  if (!isError(parsedObj)) return parsedObj
 }
 
