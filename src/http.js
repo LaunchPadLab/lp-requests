@@ -79,7 +79,7 @@ function http (endpoint, options={}) {
   // Build full URL
   const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
 
-  // Run before hook and add values to config
+  // Run before hook and set config if value is returned
   if (before) config = before(config) || config
 
   return fetch(endpointUrl, config)
