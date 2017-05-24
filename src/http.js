@@ -23,9 +23,10 @@ import joinUrl from 'url-join'
  * ```
  * Any one of these settings can be overriden using the passed-in config object.
  *
- * In addition to the normal Fetch API settings, the config object may also contain two special settings just for `http`:
+ * In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
  * - `'root'`: A path to be appended to the given endpoint (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
+ * - `'before'`: A function that's called before the request executes. This function is passed the request configuration and its return value will be used as the new configuration.
  *
  * @name http
  * @type Function
@@ -59,9 +60,9 @@ const DEFAULT_OPTIONS = {
 
 function http (endpoint, options={}) {
 
-  const { root, csrf=true, csrfToken, getCsrfToken, headers, ...rest } = options
+  const { root, csrf=true, headers, before, ...rest } = options
 
-  const config = omitUndefined({
+  let config = omitUndefined({
     ...DEFAULT_OPTIONS,
     headers: { ...DEFAULT_OPTIONS.headers, ...headers },
     ...rest
@@ -70,13 +71,16 @@ function http (endpoint, options={}) {
   if (config.body) config.body = JSON.stringify(decamelizeKeys(config.body))
 
   // Include token if necessary
-  if (isTokenMethod(config.method)) {
-    const token = csrfToken || getCsrfToken ? getCsrfToken() : getToken(csrf)
+  if (isTokenMethod(config.method) && csrf) {
+    const token = getToken(csrf)
     if (token) config.headers = { ...config.headers, 'X-CSRF-Token': token }
   }
 
   // Build full URL
   const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
+
+  // Run before hook and add values to config
+  if (before) config = before(config) || config
 
   return fetch(endpointUrl, config)
     .then(response => response.json()
