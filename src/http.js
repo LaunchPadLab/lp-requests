@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 import { isTokenMethod, getToken } from './csrf'
 import { camelizeKeys, decamelizeKeys, omitUndefined } from './utils'
 import HttpError from './http-error'
-import url from 'url'
+import joinUrl from 'url-join'
 
 /**
  * 
@@ -74,7 +74,7 @@ function http (endpoint, { root='', csrf=true, csrfToken, getCsrfToken, headers,
   }
 
   // Build full URL
-  const endpointUrl = url.resolve(root, endpoint)
+  const endpointUrl = joinUrl(root, endpoint)
 
   return fetch(endpointUrl, config)
     .then(response => response.json()
