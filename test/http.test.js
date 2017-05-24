@@ -49,8 +49,8 @@ test('http adds custom CSRF token to request', () => {
   })
 })
 
-test('http appends custom root to request', () => {
-  const root = 'http://root'
+test('http prepends custom root to request', () => {
+  const root = 'http://root/api/v1'
   return http(successUrl, {
     method: 'POST',
     root
