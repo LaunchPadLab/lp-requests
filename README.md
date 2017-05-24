@@ -11,7 +11,7 @@ For new features, please submit an issue or PR with the label of `idea`, and inc
 Pull requests MUST be approved by someone on the team before merging into master. Once the PR is approved, but before it is merged, the implementor should bump the version according to semantic versioning with `yarn version`. Once merged, the master branch will automatically be published the newest version to NPM.
 
 ## Development
-* `git clone git@github.com:LaunchPadLab/lp-redux-api.git`
+* `git clone git@github.com:LaunchPadLab/lp-requests.git`
 * `yarn install`
 
 If you are developing and want to see the results in a local client application:
