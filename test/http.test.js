@@ -49,6 +49,12 @@ test('http adds custom CSRF token to request', () => {
   })
 })
 
+test('http passes url to request', () => {
+  return http(successUrl).then((res) => {
+    expect(res.url).toEqual(successUrl)
+  })
+})
+
 test('http prepends custom root to request', () => {
   const root = 'http://root/api/v1'
   return http(successUrl, {

@@ -57,12 +57,14 @@ const DEFAULT_OPTIONS = {
   }
 }
 
-function http (endpoint, { root='', csrf=true, csrfToken, getCsrfToken, headers, ...options }) {
+function http (endpoint, options={}) {
+
+  const { root, csrf=true, csrfToken, getCsrfToken, headers, ...rest } = options
 
   const config = omitUndefined({
     ...DEFAULT_OPTIONS,
     headers: { ...DEFAULT_OPTIONS.headers, ...headers },
-    ...options
+    ...rest
   })
 
   if (config.body) config.body = JSON.stringify(decamelizeKeys(config.body))
@@ -74,7 +76,7 @@ function http (endpoint, { root='', csrf=true, csrfToken, getCsrfToken, headers,
   }
 
   // Build full URL
-  const endpointUrl = joinUrl(root, endpoint)
+  const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
 
   return fetch(endpointUrl, config)
     .then(response => response.json()
