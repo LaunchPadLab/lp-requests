@@ -26,7 +26,7 @@ import joinUrl from 'url-join'
  * In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
  * - `'root'`: A path to be appended to the given endpoint (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
- * - `'before'`: A function that's called before the request executes. This function is passed the request configuration and its return value will be used as the new configuration.
+ * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
  * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
  *
  *
@@ -95,7 +95,7 @@ function http (endpoint, options={}) {
 
 // Run before hook (if provided) and set options if value is returned
 function beforeHook ({ before, ...options }) {
-  return before ? before(options) : options
+  return before ? { ...options, ...before(options) } : options
 }
 
 // Return bearer authorization header if token is present
