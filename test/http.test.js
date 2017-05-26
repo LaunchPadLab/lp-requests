@@ -66,11 +66,19 @@ test('http prepends custom root to request', () => {
 })
 
 test('http modifies configuration using `before` hook', () => {
-  const NEW_CONFIG = { new: 'config' }
-  const before = () => NEW_CONFIG
+  const before = () => ({ foo: 'bar' })
   return http(successUrl, { before }).then((res) => {
     delete res.url
-    expect(res).toEqual(NEW_CONFIG)
+    expect(res.foo).toEqual('bar')
+  })
+})
+
+test('http adds auth header if bearer token is provided', () => {
+  const TOKEN = 'hello there'
+  return http(successUrl, { 
+    bearerToken: TOKEN
+  }).then((res) => {
+    expect(res.headers.authorization).toEqual(`Bearer ${TOKEN}`)
   })
 })
 

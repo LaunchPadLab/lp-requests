@@ -57,10 +57,12 @@ This function adds the following config settings to the given request:
 
 Any one of these settings can be overriden using the passed-in config object.
 
-In addition to the normal Fetch API settings, the config object may also contain two special settings just for `http`:
+In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
 
 -   `'root'`: A path to be appended to the given endpoint (default=`''`).
 -   `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
+-   `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
+-   `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
 
 **Parameters**
 

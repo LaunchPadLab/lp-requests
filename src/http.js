@@ -3,6 +3,11 @@ import { isTokenMethod, getToken } from './csrf'
 import { camelizeKeys, decamelizeKeys, omitUndefined } from './utils'
 import HttpError from './http-error'
 import joinUrl from 'url-join'
+import {
+  runBeforeHook,
+  getAuthHeaders,
+  isJSONRequest,
+} from './helpers'
 
 /**
  * 
@@ -26,7 +31,9 @@ import joinUrl from 'url-join'
  * In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
  * - `'root'`: A path to be appended to the given endpoint (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
- * - `'before'`: A function that's called before the request executes. This function is passed the request configuration and its return value will be used as the new configuration.
+ * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
+ * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
+ *
  *
  * @name http
  * @type Function
@@ -60,15 +67,17 @@ const DEFAULT_OPTIONS = {
 
 function http (endpoint, options={}) {
 
-  const { root, csrf=true, headers, before, ...rest } = options
+  const { root, csrf=true, headers, bearerToken, ...rest } = runBeforeHook(options)
+
+  const authHeaders = getAuthHeaders(bearerToken)
 
   let config = omitUndefined({
     ...DEFAULT_OPTIONS,
-    headers: { ...DEFAULT_OPTIONS.headers, ...headers },
+    headers: { ...DEFAULT_OPTIONS.headers, ...authHeaders, ...headers },
     ...rest
   })
 
-  if (config.body) config.body = JSON.stringify(decamelizeKeys(config.body))
+  if (config.body && isJSONRequest(config)) config.body = JSON.stringify(decamelizeKeys(config.body))
 
   // Include token if necessary
   if (isTokenMethod(config.method) && csrf) {
@@ -78,9 +87,6 @@ function http (endpoint, options={}) {
 
   // Build full URL
   const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
-
-  // Run before hook and set config if value is returned
-  if (before) config = before(config) || config
 
   return fetch(endpointUrl, config)
     .then(response => response.json()
