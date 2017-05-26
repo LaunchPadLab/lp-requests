@@ -3,6 +3,11 @@ import { isTokenMethod, getToken } from './csrf'
 import { camelizeKeys, decamelizeKeys, omitUndefined } from './utils'
 import HttpError from './http-error'
 import joinUrl from 'url-join'
+import {
+  runBeforeHook,
+  getAuthHeaders,
+  isJSONRequest,
+} from './helpers'
 
 /**
  * 
@@ -62,7 +67,7 @@ const DEFAULT_OPTIONS = {
 
 function http (endpoint, options={}) {
 
-  const { root, csrf=true, headers, bearerToken, ...rest } = beforeHook(options)
+  const { root, csrf=true, headers, bearerToken, ...rest } = runBeforeHook(options)
 
   const authHeaders = getAuthHeaders(bearerToken)
 
@@ -72,7 +77,7 @@ function http (endpoint, options={}) {
     ...rest
   })
 
-  if (config.body) config.body = JSON.stringify(decamelizeKeys(config.body))
+  if (config.body && isJSONRequest(config)) config.body = JSON.stringify(decamelizeKeys(config.body))
 
   // Include token if necessary
   if (isTokenMethod(config.method) && csrf) {
@@ -91,16 +96,6 @@ function http (endpoint, options={}) {
         throw new HttpError(response.status, response.statusText, camelized)
       })
     )
-}
-
-// Run before hook (if provided) and set options if value is returned
-function beforeHook ({ before, ...options }) {
-  return before ? { ...options, ...before(options) } : options
-}
-
-// Return bearer authorization header if token is present
-function getAuthHeaders (bearerToken) {
-  return bearerToken ? { 'Authorization': `Bearer ${bearerToken}` } : {}
 }
 
 export default http
