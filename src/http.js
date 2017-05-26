@@ -27,6 +27,8 @@ import joinUrl from 'url-join'
  * - `'root'`: A path to be appended to the given endpoint (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
  * - `'before'`: A function that's called before the request executes. This function is passed the request configuration and its return value will be used as the new configuration.
+ * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
+ *
  *
  * @name http
  * @type Function
@@ -60,11 +62,13 @@ const DEFAULT_OPTIONS = {
 
 function http (endpoint, options={}) {
 
-  const { root, csrf=true, headers, before, ...rest } = options
+  const { root, csrf=true, headers, bearerToken, ...rest } = beforeHook(options)
+
+  const authHeaders = getAuthHeaders(bearerToken)
 
   let config = omitUndefined({
     ...DEFAULT_OPTIONS,
-    headers: { ...DEFAULT_OPTIONS.headers, ...headers },
+    headers: { ...DEFAULT_OPTIONS.headers, ...authHeaders, ...headers },
     ...rest
   })
 
@@ -79,9 +83,6 @@ function http (endpoint, options={}) {
   // Build full URL
   const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
 
-  // Run before hook and set config if value is returned
-  if (before) config = before(config) || config
-
   return fetch(endpointUrl, config)
     .then(response => response.json()
       .then(json => {
@@ -90,6 +91,16 @@ function http (endpoint, options={}) {
         throw new HttpError(response.status, response.statusText, camelized)
       })
     )
+}
+
+// Run before hook (if provided) and set options if value is returned
+function beforeHook ({ before, ...options }) {
+  return before ? before(options) : options
+}
+
+// Return bearer authorization header if token is present
+function getAuthHeaders (bearerToken) {
+  return bearerToken ? { 'Authorization': `Bearer ${bearerToken}` } : {}
 }
 
 export default http
