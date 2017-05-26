@@ -65,6 +65,15 @@ test('http prepends custom root to request', () => {
   })
 })
 
+test('http modifies configuration using `before` hook', () => {
+  const NEW_CONFIG = { new: 'config' }
+  const before = () => NEW_CONFIG
+  return http(successUrl, { before }).then((res) => {
+    delete res.url
+    expect(res).toEqual(NEW_CONFIG)
+  })
+})
+
 test('http throws an HttpError on request failure', () => {
   return http(failureUrl, {
     method: 'POST'
