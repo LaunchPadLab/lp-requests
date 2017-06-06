@@ -91,7 +91,7 @@ function http (endpoint, options={}) {
   return fetch(endpointUrl, config)
     .then(response => response.json()
       .then(json => {
-        const camelized = camelizeKeys(json.data || json)
+        const camelized = camelizeKeys(json)
         if (response.ok) return camelized
         throw new HttpError(response.status, response.statusText, camelized)
       })
