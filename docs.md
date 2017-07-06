@@ -123,7 +123,7 @@ http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 A helper function to determine if the current user is authenticated.
 This function accepts an object argument with a `context` key.
 
-This returns true when the LP Redux Api cookie exists and contains a
+This returns true when the LP Auth Api cookie exists and contains a
 token.
 If the `context` key is present, this function returns true if the user is
 both authenticated and the specified context is present.
@@ -166,11 +166,11 @@ Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 A helper function to retrieve the authentication context for the 
 authenticated user.
 
-This function returns the context string when the LP Redux Api cookie exists, 
+This function returns the context string when the LP Auth Api cookie exists, 
 contains a valid token, and contains a context.
 
 This function returns `undefined` when there is no context present,
-or if the LP Redux API cookie does not exist.
+or if the LP Auth API cookie does not exist.
 
 **Examples**
 

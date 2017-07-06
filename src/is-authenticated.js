@@ -4,7 +4,7 @@ import { getLpAuthCookie, parseObject } from './utils'
  * A helper function to determine if the current user is authenticated.
  * This function accepts an object argument with a `context` key.
  *
- * This returns true when the LP Redux Api cookie exists and contains a
+ * This returns true when the LP Auth Api cookie exists and contains a
  * token.
  * If the `context` key is present, this function returns true if the user is
  * both authenticated and the specified context is present.
