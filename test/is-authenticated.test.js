@@ -42,3 +42,8 @@ test('isAuthenticated returns false when the context is null', () => {
   Cookies.set('lp_auth', { token: true, context: CONTEXT })
   expect(isAuthenticated({ context: null })).toEqual(false)
 })
+
+test('isAuthenticated returns true when the lp_auth cookie is valid and the options param does not contain a context', () => {
+  Cookies.set('lp_auth', { token: true })
+  expect(isAuthenticated({ foo: 'bar' })).toEqual(true)
+})
