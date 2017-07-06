@@ -6,7 +6,6 @@
 -   [http](#http)
 -   [HttpError](#httperror)
 -   [isAuthenticated](#isauthenticated)
--   [isAuthenticatedWithContext](#isauthenticatedwithcontext)
 -   [getAuthenticationContext](#getauthenticationcontext)
 
 ## api
@@ -122,56 +121,42 @@ http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 ## isAuthenticated
 
 A helper function to determine if the current user is authenticated.
+This function accepts as object argument with a `context` key.
+If the `context` argument is present, this function determines if the user is
+both authenticated and authenticated for the specificed context.
 This returns true when the LP Redux Api cookie exists and contains a
 token.
 
 Note, this does not **validate** the token, it only checks for
 presence, validation must be done on the server.
 
+**Parameters**
+
+-   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
+    -   `$0.context`  
+
 **Examples**
 
 ```javascript
+// WITHOUT context
+
 // After sign in
 isAuthenticated() // true
 
 // After sign out
 isAuthenticated() // false
-```
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+// WITH context
 
-## isAuthenticatedWithContext
-
-A helper function to determine if the current user is authenticated
-for a specific context. This is useful if the client needs to know
-more about the type of user that is logged in.
-
-This returns true when the LP Redux Api cookie exists, contains a
-token, and contains the specified context.
-
-Note, this does not **validate** the token, it only checks for
-presence, validation must be done on the server.
-
-**Parameters**
-
--   `context` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** a context that corresponds to one provided by the server
-
-**Examples**
-
-```javascript
 // After an 'admin' signs in
 isAuthenticatedWithContext('admin') // true
 
 isAuthenticatedWithContext('non-admin') // false
 
-isAuthenticatedWithContext() // false
-
 // After sign out
 isAuthenticatedWithContext('admin') // false
 
 isAuthenticatedWithContext('non-admin') // false
-
-isAuthenticatedWithContext() // false
 ```
 
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
