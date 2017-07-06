@@ -121,19 +121,19 @@ http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 ## isAuthenticated
 
 A helper function to determine if the current user is authenticated.
-This function accepts as object argument with a `context` key.
-If the `context` argument is present, this function determines if the user is
-both authenticated and authenticated for the specificed context.
+This function accepts an object argument with a `context` key.
+
 This returns true when the LP Redux Api cookie exists and contains a
 token.
+If the `context` key is present, this function returns true if the user is
+both authenticated and the specified context is present.
 
 Note, this does not **validate** the token, it only checks for
 presence, validation must be done on the server.
 
 **Parameters**
 
--   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `$0.context`  
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** config object containing the context (optional, default `{}`)
 
 **Examples**
 
