@@ -5,6 +5,9 @@
 -   [api](#api)
 -   [http](#http)
 -   [HttpError](#httperror)
+-   [isAuthenticated](#isauthenticated)
+-   [isAuthenticatedWithContext](#isauthenticatedwithcontext)
+-   [getAuthenticationContext](#getauthenticationcontext)
 
 ## api
 
@@ -115,3 +118,86 @@ console.log(MyError.toString()) // "HttpError: 500 - Something went wrong"
 // Instantiated by http module
 http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 ```
+
+## isAuthenticated
+
+A helper function to determine if the current user is authenticated.
+This returns true when the LP Redux Api cookie exists and contains a
+token.
+
+Note, this does not **validate** the token, it only checks for
+presence, validation must be done on the server.
+
+**Examples**
+
+```javascript
+// After sign in
+isAuthenticated() // true
+
+// After sign out
+isAuthenticated() // false
+```
+
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+## isAuthenticatedWithContext
+
+A helper function to determine if the current user is authenticated
+for a specific context. This is useful if the client needs to know
+more about the type of user that is logged in.
+
+This returns true when the LP Redux Api cookie exists, contains a
+token, and contains the specified context.
+
+Note, this does not **validate** the token, it only checks for
+presence, validation must be done on the server.
+
+**Parameters**
+
+-   `context` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** a context that corresponds to one provided by the server
+
+**Examples**
+
+```javascript
+// After an 'admin' signs in
+isAuthenticatedWithContext('admin') // true
+
+isAuthenticatedWithContext('non-admin') // false
+
+isAuthenticatedWithContext() // false
+
+// After sign out
+isAuthenticatedWithContext('admin') // false
+
+isAuthenticatedWithContext('non-admin') // false
+
+isAuthenticatedWithContext() // false
+```
+
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+## getAuthenticationContext
+
+A helper function to retrieve the authentication context for the 
+authenticated user.
+
+This function returns the context string when the LP Redux Api cookie exists, 
+contains a valid token, and contains a context.
+
+This function returns `undefined` when there is no context present,
+or if the LP Redux API cookie does not exist.
+
+**Examples**
+
+```javascript
+// After an 'admin' signs in
+getAuthenticationContext() // 'admin'
+
+// After a user with no context signs in
+getAuthenticationContext() // undefined 
+
+// After sign out
+getAuthenticationContext() // undefined
+```
+
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
