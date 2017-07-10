@@ -27,14 +27,14 @@ import { getLpAuthCookie, parseObject } from './utils'
  * // WITH context
  * 
  * // After an 'admin' signs in
- * isAuthenticatedWithContext({ context: 'admin' }) // true
+ * isAuthenticated({ context: 'admin' }) // true
  * 
- * isAuthenticatedWithContext({ context: 'non-admin' }) // false
+ * isAuthenticated({ context: 'non-admin' }) // false
  * 
  * // After sign out
- * isAuthenticatedWithContext({ context: 'admin' }) // false
+ * isAuthenticated({ context: 'admin' }) // false
  * 
- * isAuthenticatedWithContext({ context: 'non-admin' }) // false
+ * isAuthenticated({ context: 'non-admin' }) // false
  */
 export default function isAuthenticated (options = {}) {
   const { context } = options
