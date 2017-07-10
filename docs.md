@@ -5,6 +5,8 @@
 -   [api](#api)
 -   [http](#http)
 -   [HttpError](#httperror)
+-   [isAuthenticated](#isauthenticated)
+-   [getAuthenticationContext](#getauthenticationcontext)
 
 ## api
 
@@ -115,3 +117,72 @@ console.log(MyError.toString()) // "HttpError: 500 - Something went wrong"
 // Instantiated by http module
 http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 ```
+
+## isAuthenticated
+
+A helper function to determine if the current user is authenticated.
+This function accepts an object argument with a `context` key.
+
+This returns true when the LP Auth Api cookie exists and contains a
+token.
+If the `context` key is present, this function returns true if the user is
+both authenticated and the specified context is present.
+
+Note, this does not **validate** the token, it only checks for
+presence, validation must be done on the server.
+
+**Parameters**
+
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** config object containing the context (optional, default `{}`)
+
+**Examples**
+
+```javascript
+// WITHOUT context
+
+// After sign in
+isAuthenticated() // true
+
+// After sign out
+isAuthenticated() // false
+
+// WITH context
+
+// After an 'admin' signs in
+isAuthenticated({ context: 'admin' }) // true
+
+isAuthenticated({ context: 'non-admin' }) // false
+
+// After sign out
+isAuthenticated({ context: 'admin' }) // false
+
+isAuthenticated({ context: 'non-admin' }) // false
+```
+
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+## getAuthenticationContext
+
+A helper function to retrieve the authentication context for the 
+authenticated user.
+
+This function returns the context string when the LP Auth Api cookie exists, 
+contains a valid token, and contains a context.
+
+This function returns `undefined` when there is no context present,
+or if the LP Auth API cookie does not exist.
+
+**Examples**
+
+```javascript
+// After an 'admin' signs in
+getAuthenticationContext() // 'admin'
+
+// After a user with no context signs in
+getAuthenticationContext() // undefined 
+
+// After sign out
+getAuthenticationContext() // undefined
+```
+
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
