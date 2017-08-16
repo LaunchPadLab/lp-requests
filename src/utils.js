@@ -5,7 +5,8 @@ import isError from 'lodash/isError'
 import attempt from 'lodash/attempt'
 import Cookies from 'js-cookie'
 
-export { default as get } from 'lodash/fp/get'
+import get from 'lodash/fp/get'
+export { get }
 export { default as set } from 'lodash/fp/set'
 export { default as unset } from 'lodash/fp/unset'
 export { default as compose } from 'lodash/fp/compose'
@@ -48,3 +49,8 @@ export function getLpAuthCookie () {
   return Cookies.get('lp_auth')
 }
 
+// Get data at path if path exists,
+// otherwise return full object
+export function getDataAtPath (obj, path) {
+  return path ? get(path, obj) : obj
+}
