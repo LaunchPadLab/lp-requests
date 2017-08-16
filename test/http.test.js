@@ -90,6 +90,24 @@ test('http throws an HttpError on request failure', () => {
   })
 })
 
+test('http pulls data from response using successDataPath', () => {
+  return http(successUrl, {
+    method: 'POST',
+    successDataPath: 'method',
+  }).catch((res) => {
+    expect(res).toEqual('POST')
+  })
+})
+
+test('http pulls data from failure response using failureDataPath', () => {
+  return http(failureUrl, {
+    method: 'POST',
+    failureDataPath: 'method',
+  }).catch((err) => {
+    expect(err.response).toEqual('POST')
+  })
+})
+
 /* MOCK STUFF */
 
 // Mock token elements

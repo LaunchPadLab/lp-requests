@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { isTokenMethod, getToken } from './csrf'
-import { camelizeKeys, decamelizeKeys, omitUndefined } from './utils'
-import HttpError from './http-error'
+import { camelizeKeys, decamelizeKeys, omitUndefined, getDataAtPath } from '../utils'
+import HttpError from '../http-error'
 import joinUrl from 'url-join'
 import {
   runBeforeHook,
@@ -33,7 +33,8 @@ import {
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
  * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
  * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
- *
+ * - `successDataPath`: A path to response data that the promise will resolve with.
+ * - `failureDataPath`: A path to response data that will be included in the HttpError object.
  *
  * @name http
  * @type Function
@@ -66,34 +67,38 @@ const DEFAULT_OPTIONS = {
 }
 
 function http (endpoint, options={}) {
-
-  const { root, csrf=true, headers, bearerToken, ...rest } = runBeforeHook(options)
-
-  const authHeaders = getAuthHeaders(bearerToken)
-
-  let config = omitUndefined({
-    ...DEFAULT_OPTIONS,
-    headers: { ...DEFAULT_OPTIONS.headers, ...authHeaders, ...headers },
+  // Run "before" hook and pull out non-fetch options
+  const { 
+    root, 
+    csrf=true, 
+    headers={}, 
+    bearerToken,
+    successDataPath,
+    failureDataPath,
     ...rest
+  } = runBeforeHook(options)
+  // Build fetch config
+  const fetchConfig = omitUndefined({
+    ...DEFAULT_OPTIONS,
+    headers: { ...DEFAULT_OPTIONS.headers, ...getAuthHeaders(bearerToken), ...headers },
+    ...rest,
   })
-
-  if (config.body && isJSONRequest(config)) config.body = JSON.stringify(decamelizeKeys(config.body))
-
+  // Decamlize and stringify body if it's a JSON request
+  if (isJSONRequest(fetchConfig) && fetchConfig.body) fetchConfig.body = JSON.stringify(decamelizeKeys(fetchConfig.body))
   // Include token if necessary
-  if (isTokenMethod(config.method) && csrf) {
+  if (isTokenMethod(fetchConfig.method) && csrf) {
     const token = getToken(csrf)
-    if (token) config.headers = { ...config.headers, 'X-CSRF-Token': token }
+    if (token) fetchConfig.headers = { ...fetchConfig.headers, 'X-CSRF-Token': token }
   }
-
   // Build full URL
   const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
-
-  return fetch(endpointUrl, config)
+  // Make request
+  return fetch(endpointUrl, fetchConfig)
     .then(response => response.json()
       .then(json => {
         const camelized = camelizeKeys(json)
-        if (response.ok) return camelized
-        throw new HttpError(response.status, response.statusText, camelized)
+        if (response.ok) return getDataAtPath(camelized, successDataPath)
+        throw new HttpError(response.status, response.statusText, getDataAtPath(camelized, failureDataPath))
       })
     )
 }

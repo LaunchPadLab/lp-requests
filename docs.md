@@ -65,6 +65,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
 -   `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
 -   `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
+-   `successDataPath`: A path to response data that the promise will resolve with.
+-   `failureDataPath`: A path to response data that will be included in the HttpError object.
 
 **Parameters**
 
