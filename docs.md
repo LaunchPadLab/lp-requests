@@ -3,6 +3,8 @@
 ### Table of Contents
 
 -   [api](#api)
+-   [configureApi](#configureapi)
+-   [configureHttp](#configurehttp)
 -   [http](#http)
 -   [HttpError](#httperror)
 -   [isAuthenticated](#isauthenticated)
@@ -39,6 +41,48 @@ getUsers()
    .then(res => console.log('The users are', res))
    .catch(err => console.log('An error occurred!', err))
 ```
+
+## configureApi
+
+A function that returns a configured instance of the [api](#api) module.
+This function's argument will be used as the default config for the returned instance.
+
+Note: This configuration can always be overridden by passing in options manually.
+
+**Parameters**
+
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An api configuration object
+
+**Examples**
+
+```javascript
+const myApi = configureApi({ root: 'http://example.com', mode: 'cors' })
+
+myApi.get('/thing') // A cors request will be made to "http://example.com/thing"
+```
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configured api instance
+
+## configureHttp
+
+A function that returns a configured instance of the [http](http) module.
+This function's argument will be used as the default config for the returned instance.
+
+Note: This configuration can always be overridden by passing in options manually.
+
+**Parameters**
+
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An http configuration object
+
+**Examples**
+
+```javascript
+const myHttp = configureHttp({ root: 'http://example.com', mode: 'cors' })
+
+myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://example.com/thing"
+```
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configured http instance
 
 ## http
 
