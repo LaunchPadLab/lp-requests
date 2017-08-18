@@ -2,11 +2,11 @@ import fetch from 'isomorphic-fetch'
 import { isTokenMethod, getToken } from './csrf'
 import { camelizeKeys, decamelizeKeys, omitUndefined, getDataAtPath } from '../utils'
 import HttpError from '../http-error'
-import joinUrl from 'url-join'
 import {
   runBeforeHook,
   getAuthHeaders,
   isJSONRequest,
+  buildUrl,
 } from './helpers'
 
 /**
@@ -35,6 +35,7 @@ import {
  * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
  * - `successDataPath`: A path to response data that the promise will resolve with.
  * - `failureDataPath`: A path to response data that will be included in the HttpError object.
+ * - `query`: An object that will be transformed into a query string and appended to the request URL.
  *
  * @name http
  * @type Function
@@ -75,6 +76,7 @@ function http (endpoint, options={}) {
     bearerToken,
     successDataPath,
     failureDataPath,
+    query,
     ...rest
   } = runBeforeHook(options)
   // Build fetch config
@@ -91,9 +93,9 @@ function http (endpoint, options={}) {
     if (token) fetchConfig.headers = { ...fetchConfig.headers, 'X-CSRF-Token': token }
   }
   // Build full URL
-  const endpointUrl = root ? joinUrl(root, endpoint) : endpoint
+  const url = buildUrl({ root, endpoint, query })
   // Make request
-  return fetch(endpointUrl, fetchConfig)
+  return fetch(url, fetchConfig)
     .then(response => response.json()
       .then(json => {
         const camelized = camelizeKeys(json)

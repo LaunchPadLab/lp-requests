@@ -16,8 +16,8 @@
     "test:coverage": "jest --coverage",
     "report-coverage": "codeclimate-test-reporter < coverage/lcov.info"
   },
-  "repository": "launchpadlab/lp-redux-api",
-  "homepage": "https://github.com/launchpadlab/lp-redux-api",
+  "repository": "launchpadlab/lp-requests",
+  "homepage": "https://github.com/launchpadlab/lp-requests",
   "author": {
     "name": "dpikt",
     "email": "david@launchpadlab.com"
@@ -47,6 +47,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
+    "query-string": "^5.0.0",
     "url-join": "^2.0.2"
   }
 }
