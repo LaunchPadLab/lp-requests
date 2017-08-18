@@ -94,7 +94,7 @@ test('http pulls data from response using successDataPath', () => {
   return http(successUrl, {
     method: 'POST',
     successDataPath: 'method',
-  }).catch((res) => {
+  }).then((res) => {
     expect(res).toEqual('POST')
   })
 })
@@ -105,6 +105,25 @@ test('http pulls data from failure response using failureDataPath', () => {
     failureDataPath: 'method',
   }).catch((err) => {
     expect(err.response).toEqual('POST')
+  })
+})
+
+
+test('http adds query string if query hash is provided', () => {
+  return http(successUrl, {
+    method: 'POST',
+    query: { foo: 'bar' }
+  }).then((res) => {
+    expect(res.url).toEqual(`${successUrl}?foo=bar`)
+  })
+})
+
+test('http decamelizes query string by default', () => {
+  return http(successUrl, {
+    method: 'POST',
+    query: { foo: 'bar', fooBar: 'baz' }
+  }).then((res) => {
+    expect(res.url).toEqual(`${successUrl}?foo=bar&foo_bar=baz`)
   })
 })
 

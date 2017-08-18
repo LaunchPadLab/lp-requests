@@ -111,6 +111,7 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
 -   `successDataPath`: A path to response data that the promise will resolve with.
 -   `failureDataPath`: A path to response data that will be included in the HttpError object.
+-   `query`: An object that will be transformed into a query string and appended to the request URL.
 
 **Parameters**
 
