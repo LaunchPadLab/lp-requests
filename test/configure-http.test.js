@@ -5,8 +5,9 @@ import { successUrl } from 'isomorphic-fetch'
 // returning options as the response
 
 test('configureHttp adds defaults to request options', () => {
-  const myHttp = configureHttp({ foo: 'bar' })
-  return myHttp(successUrl).then((res) => {
-    expect(res.foo).toEqual('bar')
+  const myHttp = configureHttp({ defaultVal: 'foo' })
+  return myHttp(successUrl, { customVal: 'bar' }).then((res) => {
+    expect(res.defaultVal).toEqual('foo')
+    expect(res.customVal).toEqual('bar')
   })
 })

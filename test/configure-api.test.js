@@ -5,8 +5,9 @@ import { successUrl } from 'isomorphic-fetch'
 // returning options as the response
 
 test('configureApi adds defaults to request options', () => {
-  const myApi = configureApi({ foo: 'bar' })
-  return myApi.get(successUrl).then((res) => {
-    expect(res.foo).toEqual('bar')
+  const myApi = configureApi({ defaultVal: 'foo' })
+  return myApi.get(successUrl, { customVal: 'bar' }).then((res) => {
+    expect(res.defaultVal).toEqual('foo')
+    expect(res.customVal).toEqual('bar')
   })
 })
