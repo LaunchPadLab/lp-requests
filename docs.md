@@ -52,6 +52,7 @@ Note: This configuration can always be overridden by passing in options manually
 **Parameters**
 
 -   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An api configuration object
+-   `baseApi` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An existing api instance to extend with the configuration
 
 **Examples**
 
@@ -73,6 +74,7 @@ Note: This configuration can always be overridden by passing in options manually
 **Parameters**
 
 -   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An http configuration object
+-   `baseHttp` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An existing http instance to extend with the configuration
 
 **Examples**
 

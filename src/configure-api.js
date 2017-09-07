@@ -1,4 +1,4 @@
-import { api } from './api'
+import { Api } from './api'
 
 /**
  * 
@@ -10,6 +10,7 @@ import { api } from './api'
  * @name configureApi
  * @type Function
  * @param {Object} config - An api configuration object
+ * @param {Object} [baseApi] - An existing api instance to extend with the configuration
  * @returns {Object} A configured api instance
  * 
  * @example
@@ -21,8 +22,8 @@ import { api } from './api'
  * 
  */
 
-function configureApi (defaults) {
-  return api(defaults)
+function configureApi (defaults, baseApi=new Api()) {
+  return new Api({ ...baseApi.defaults, ...defaults })
 }
 
 export default configureApi

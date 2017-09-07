@@ -10,6 +10,7 @@ import http from './http'
  * @name configureHttp
  * @type Function
  * @param {Object} config - An http configuration object
+ * @param {Object} [baseHttp] - An existing http instance to extend with the configuration
  * @returns {Object} A configured http instance
  * 
  * @example
@@ -21,10 +22,9 @@ import http from './http'
  * 
  */
 
-
-function configureHttp (defaults) {
+function configureHttp (defaults, baseHttp=http) {
   return function configuredHttp (endpoint, options) {
-    return http(endpoint, { ...defaults, ...options })
+    return baseHttp(endpoint, { ...defaults, ...options })
   }
 }
 
