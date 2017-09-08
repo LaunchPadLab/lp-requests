@@ -11,3 +11,13 @@ test('configureHttp adds defaults to request options', () => {
     expect(res.customVal).toEqual('bar')
   })
 })
+
+test('configureHttp can accept a custom base http', () => {
+  const myFirstHttp = configureHttp({ firstVal: 'foo' })
+  const mySecondHttp = configureHttp({ secondVal: 'bar' }, myFirstHttp)
+  return mySecondHttp(successUrl, { thirdVal: 'baz' }).then((res) => {
+    expect(res.firstVal).toEqual('foo')
+    expect(res.secondVal).toEqual('bar')
+    expect(res.thirdVal).toEqual('baz')
+  })
+})

@@ -33,33 +33,30 @@ import http from './http'
  *    .catch(err => console.log('An error occurred!', err))
  */
 
-export function api (defaults={}) {
-
-  function requestWithMethod (url, body, opts, method) {
-    return http(url, { ...defaults, ...opts, body, method })
+export class Api {
+  constructor (defaults={}) {
+    this.defaults = defaults
   }
-
-  return {
-    get (url, opts={}) {
-      const body = null
-      return requestWithMethod(url, body, opts, 'GET')
-    },
-    patch (url, body, opts={}) {
-      return requestWithMethod(url, body, opts, 'PATCH')
-    },
-    post (url, body, opts={}) {
-      return requestWithMethod(url, body, opts, 'POST')
-    },
-    put (url, body, opts={}) {
-      return requestWithMethod(url, body, opts, 'PUT')
-    },
-    destroy (url, body, opts={}) {
-      return requestWithMethod(url, body, opts, 'DELETE')
-    },
-    call (url, method, body, opts={}) {
-      return requestWithMethod(url, body, opts, method)
-    },
+  call (url, method, body, opts={}) {
+    return http(url, { ...this.defaults, ...opts, body, method })
+  }
+  get (url, opts={}) {
+    const body = null
+    return this.call(url, 'GET', body, opts)
+  }
+  patch (url, body, opts={}) {
+    return this.call(url, 'PATCH', body, opts)
+  }
+  post (url, body, opts={}) {
+    return this.call(url, 'POST', body, opts)
+  }
+  put (url, body, opts={}) {
+    return this.call(url, 'PUT', body, opts)
+  }
+  destroy (url, body, opts={}) {
+    return this.call(url, 'DELETE', body, opts)
   }
 }
 
-export default api()
+// Exports a single instance of the Api class
+export default new Api()
