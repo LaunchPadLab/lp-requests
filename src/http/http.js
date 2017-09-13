@@ -31,7 +31,8 @@ import {
  * In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
  * - `'root'`: A path to be appended to the given endpoint (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
- * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
+ * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options. 
+ *    It can also return a promise that resolves to a new options object. 
  * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
  * - `successDataPath`: A path to response data that the promise will resolve with.
  * - `failureDataPath`: A path to response data that will be included in the HttpError object.
@@ -67,8 +68,7 @@ const DEFAULT_OPTIONS = {
   }
 }
 
-function http (endpoint, options={}) {
-  // Run "before" hook and pull out non-fetch options
+function makeRequest (endpoint, options) {
   const { 
     root, 
     csrf=true, 
@@ -78,7 +78,7 @@ function http (endpoint, options={}) {
     failureDataPath,
     query,
     ...rest
-  } = runBeforeHook(options)
+  } = options
   // Build fetch config
   const fetchConfig = omitUndefined({
     ...DEFAULT_OPTIONS,
@@ -103,6 +103,13 @@ function http (endpoint, options={}) {
         throw new HttpError(response.status, response.statusText, getDataAtPath(camelized, failureDataPath))
       })
     )
+}
+
+function http (endpoint, options={}) {
+  const { before, ...rest } = options
+  // Run "before" hook and pull out non-fetch options
+  return runBeforeHook(before, rest)
+    .then(computedOptions => makeRequest(endpoint, computedOptions))
 }
 
 export default http
