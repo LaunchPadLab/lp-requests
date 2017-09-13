@@ -4,6 +4,7 @@ import isUndefined from 'lodash/isUndefined'
 import isError from 'lodash/isError'
 import attempt from 'lodash/attempt'
 import Cookies from 'js-cookie'
+import isPromise from 'is-promise'
 
 import get from 'lodash/fp/get'
 export { get }
@@ -43,14 +44,21 @@ export function parseObject (str) {
   if (!isError(parsedObj)) return parsedObj
 }
 
-// Get the auth cookie used by lp_token_auth
+// Gets the auth cookie used by lp_token_auth
 // Returns undefined if the cookie is not set
 export function getLpAuthCookie () {
   return Cookies.get('lp_auth')
 }
 
-// Get data at path if path exists,
-// otherwise return full object
+// Gets data at path if path exists,
+// otherwise returns full object
 export function getDataAtPath (obj, path) {
   return path ? get(path, obj) : obj
+}
+
+// Runs a function and returns a promise with the result
+// If the function returns a promise, simply returns that
+export function awaitResult (func) {
+  const result = func()
+  return isPromise(result) ? result : Promise.resolve(result)
 }

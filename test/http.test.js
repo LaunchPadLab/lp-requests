@@ -73,6 +73,14 @@ test('http modifies configuration using `before` hook', () => {
   })
 })
 
+test('http `before` hook can return a promise', () => {
+  const before = () => Promise.resolve({ foo: 'bar' })
+  return http(successUrl, { before }).then((res) => {
+    delete res.url
+    expect(res.foo).toEqual('bar')
+  })
+})
+
 test('http adds auth header if bearer token is provided', () => {
   const TOKEN = 'hello there'
   return http(successUrl, { 
