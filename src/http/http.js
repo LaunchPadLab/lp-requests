@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { isTokenMethod, getToken } from './csrf'
-import { camelizeKeys, decamelizeKeys, omitUndefined, getDataAtPath } from '../utils'
+import { camelizeKeys, decamelizeKeys, omitUndefined, getDataAtPath, noop } from '../utils'
 import HttpError from '../http-error'
 import {
   runBeforeHook,
@@ -34,6 +34,8 @@ import {
  * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options. 
  *    It can also return a promise that resolves to a new options object. 
  * - `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
+ * - `'onSuccess'`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
+ * - `'onFailure'`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
  * - `successDataPath`: A path to response data that the promise will resolve with.
  * - `failureDataPath`: A path to response data that will be included in the HttpError object.
  * - `query`: An object that will be transformed into a query string and appended to the request URL.
@@ -106,10 +108,17 @@ function makeRequest (endpoint, options) {
 }
 
 function http (endpoint, options={}) {
-  const { before, ...rest } = options
+  const { 
+    before, 
+    onSuccess=noop, 
+    onFailure=noop, 
+    ...rest 
+  } = options
   // Run "before" hook and pull out non-fetch options
   return runBeforeHook(before, rest)
     .then(computedOptions => makeRequest(endpoint, computedOptions))
+    .then(res => onSuccess(res) || res)
+    .catch(e => { throw onFailure(e) || e })
 }
 
 export default http

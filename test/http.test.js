@@ -81,6 +81,38 @@ test('http `before` hook can return a promise', () => {
   })
 })
 
+test('http onSuccess hook is called with request result', () => {
+  expect.assertions(1)
+  const onSuccess = jest.fn()
+  return http(successUrl, { onSuccess }).then(res => {
+    expect(onSuccess).toHaveBeenCalledWith(res)
+  })
+})
+
+test('http onSuccess hook return value used as resolve value', () => {
+  const NEW_RESOLVE_VALUE = 'NEW_RESOLVE_VALUE'
+  const onSuccess = jest.fn(() => NEW_RESOLVE_VALUE)
+  return http(successUrl, { onSuccess }).then(res => {
+    expect(res).toEqual(NEW_RESOLVE_VALUE)
+  })
+})
+
+test('http onFailure hook is called with request result', () => {
+  expect.assertions(1)
+  const onFailure = jest.fn()
+  return http(failureUrl, { onFailure }).catch(e => {
+    expect(onFailure).toHaveBeenCalledWith(e)
+  })
+})
+
+test('http onSuccess hook return value used as reject value', () => {
+  const NEW_REJECT_VALUE = 'NEW_REJECT_VALUE'
+  const onFailure = jest.fn(() => NEW_REJECT_VALUE)
+  return http(failureUrl, { onFailure }).catch(e => {
+    expect(e).toEqual(NEW_REJECT_VALUE)
+  })
+})
+
 test('http adds auth header if bearer token is provided', () => {
   const TOKEN = 'hello there'
   return http(successUrl, { 
@@ -91,6 +123,7 @@ test('http adds auth header if bearer token is provided', () => {
 })
 
 test('http throws an HttpError on request failure', () => {
+  expect.assertions(1)
   return http(failureUrl, {
     method: 'POST'
   }).catch((err) => {
@@ -108,6 +141,7 @@ test('http pulls data from response using successDataPath', () => {
 })
 
 test('http pulls data from failure response using failureDataPath', () => {
+  expect.assertions(1)
   return http(failureUrl, {
     method: 'POST',
     failureDataPath: 'method',
