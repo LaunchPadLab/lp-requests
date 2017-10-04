@@ -11,6 +11,7 @@ export { get }
 export { default as set } from 'lodash/fp/set'
 export { default as unset } from 'lodash/fp/unset'
 export { default as compose } from 'lodash/fp/compose'
+export { default as noop } from 'lodash/noop'
 export { default as union } from 'lodash/union'
 
 // A wrapper around the humps library
