@@ -1,7 +1,7 @@
 import join from 'url-join'
 import { decamelizeKeys } from 'humps'
 import { stringify } from 'query-string'
-import { awaitResult } from '../utils'
+import { wrapInPromise } from '../utils'
 
 // http helpers
 
@@ -12,9 +12,7 @@ function defaultBefore () {
 
 // Run before hook (if provided) and add return value to options
 export function runBeforeHook (before=defaultBefore, options) {
-  // Grab new options from hook result or resolution of hook promise
-  return awaitResult(before)
-    .then(newOptions => ({ ...options, ...newOptions }))
+  return wrapInPromise(before(options)).then(newOptions => ({ ...options, ...newOptions }))
 }
 
 // Return bearer authorization header if token is present
