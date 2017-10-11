@@ -81,6 +81,14 @@ test('http `before` hook can return a promise', () => {
   })
 })
 
+test('http `before` is passed request options', () => {
+  const before = jest.fn()
+  const myOptions = { my: 'options' }
+  return http(successUrl, { before, ...myOptions }).then(() => {
+    expect(before).toHaveBeenCalledWith(myOptions)
+  })
+})
+
 test('http onSuccess hook is called with request result', () => {
   expect.assertions(1)
   const onSuccess = jest.fn()

@@ -57,9 +57,7 @@ export function getDataAtPath (obj, path) {
   return path ? get(path, obj) : obj
 }
 
-// Runs a function and returns a promise with the result
-// If the function returns a promise, simply returns that
-export function awaitResult (func) {
-  const result = func()
-  return isPromise(result) ? result : Promise.resolve(result)
+// Wrap a value in a Promise if it isn't already
+export function wrapInPromise (value) {
+  return isPromise(value) ? value : Promise.resolve(value)
 }
