@@ -150,11 +150,12 @@ test('http pulls data from response using successDataPath', () => {
 
 test('http failureDataPath defaults to "errors"', () => {
   expect.assertions(1)
+  const ERRORS = { 'someValue': 'there was an error' }
   return http(failureUrl, {
     method: 'POST',
-    errors: [ 'my-error' ],
+    errors: ERRORS,
   }).catch((err) => {
-    expect(err.errors).toEqual([ 'my-error' ])
+    expect(err.errors).toEqual(ERRORS)
   })
 })
 

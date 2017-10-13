@@ -11,7 +11,7 @@
  * @param {Number} status - the status code of the response
  * @param {String} statusText - the status text of the response
  * @param {Object} response - the full response object
- * @param {Object} [errors=[]] - an array of error messages associated with the response
+ * @param {Object} [errors={}] - an object containing error messages associated with the response
  * 
  * @example
  *
@@ -24,7 +24,7 @@
  */
 
 export default class HttpError extends Error {
-  constructor (status, statusText, response, errors=[]) {
+  constructor (status, statusText, response, errors={}) {
     super()
     this.name = 'HttpError'
     this.status = status

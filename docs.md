@@ -158,7 +158,7 @@ In addition to the standard [Error](https://developer.mozilla.org/en-US/docs/Web
 -   `status` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** the status code of the response
 -   `statusText` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the status text of the response
 -   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the full response object
--   `errors` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** an array of error messages associated with the response (optional, default `[]`)
+-   `errors` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** an object containing error messages associated with the response (optional, default `{}`)
 
 **Examples**
 

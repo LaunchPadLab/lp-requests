@@ -102,7 +102,8 @@ function makeRequest (endpoint, options) {
       .then(json => {
         const camelized = camelizeKeys(json)
         if (response.ok) return getDataAtPath(camelized, successDataPath)
-        throw new HttpError(response.status, response.statusText, camelized, getDataAtPath(camelized, failureDataPath))
+        const errors = getDataAtPath(camelized, failureDataPath)
+        throw new HttpError(response.status, response.statusText, camelized, errors)
       })
     )
 }
