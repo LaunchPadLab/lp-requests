@@ -4,11 +4,13 @@ test('HttpError has correct name, status, statusText and response', () => {
   const status = 500
   const statusText = 'Foo'
   const response = { bad: true }
-  const err = new HttpError(status, statusText, response)
+  const errors = [ 'my-error' ]
+  const err = new HttpError(status, statusText, response, errors)
   expect(err.name).toEqual('HttpError')
   expect(err.status).toEqual(status)
   expect(err.statusText).toEqual(statusText)
   expect(err.response).toEqual(response)
+  expect(err.errors).toEqual(errors)
 })
 
 test('HttpError builds message string correctly', () => {

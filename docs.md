@@ -115,7 +115,7 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `'onSuccess'`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
 -   `'onFailure'`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
 -   `successDataPath`: A path to response data that the promise will resolve with.
--   `failureDataPath`: A path to response data that will be included in the HttpError object.
+-   `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
 -   `query`: An object that will be transformed into a query string and appended to the request URL.
 
 **Parameters**
@@ -158,6 +158,7 @@ In addition to the standard [Error](https://developer.mozilla.org/en-US/docs/Web
 -   `status` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** the status code of the response
 -   `statusText` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the status text of the response
 -   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the full response object
+-   `errors` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** an array of error messages associated with the response (optional, default `[]`)
 
 **Examples**
 
