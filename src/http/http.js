@@ -37,7 +37,7 @@ import {
  * - `'onSuccess'`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
  * - `'onFailure'`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
  * - `successDataPath`: A path to response data that the promise will resolve with.
- * - `failureDataPath`: A path to response data that will be included in the HttpError object.
+ * - `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
  * - `query`: An object that will be transformed into a query string and appended to the request URL.
  *
  * @name http
@@ -77,7 +77,7 @@ function makeRequest (endpoint, options) {
     headers={}, 
     bearerToken,
     successDataPath,
-    failureDataPath,
+    failureDataPath='errors',
     query,
     ...rest
   } = options
@@ -102,7 +102,8 @@ function makeRequest (endpoint, options) {
       .then(json => {
         const camelized = camelizeKeys(json)
         if (response.ok) return getDataAtPath(camelized, successDataPath)
-        throw new HttpError(response.status, response.statusText, getDataAtPath(camelized, failureDataPath))
+        const errors = getDataAtPath(camelized, failureDataPath)
+        throw new HttpError(response.status, response.statusText, camelized, errors)
       })
     )
 }
