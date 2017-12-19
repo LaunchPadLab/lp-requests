@@ -74,6 +74,7 @@ function makeRequest (endpoint, options) {
   const { 
     root, 
     csrf=true, 
+    overrideHeaders=false,
     headers={}, 
     bearerToken,
     successDataPath,
@@ -82,9 +83,11 @@ function makeRequest (endpoint, options) {
     ...rest
   } = options
   // Build fetch config
+  const allHeaders = { ...DEFAULT_OPTIONS.headers, ...getAuthHeaders(bearerToken), ...headers }
+  const requestHeaders = overrideHeaders ? { ...headers } : allHeaders
   const fetchConfig = omitUndefined({
     ...DEFAULT_OPTIONS,
-    headers: { ...DEFAULT_OPTIONS.headers, ...getAuthHeaders(bearerToken), ...headers },
+    headers: requestHeaders,
     ...rest,
   })
   // Decamlize and stringify body if it's a JSON request
