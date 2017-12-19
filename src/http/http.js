@@ -39,6 +39,7 @@ import {
  * - `successDataPath`: A path to response data that the promise will resolve with.
  * - `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
  * - `query`: An object that will be transformed into a query string and appended to the request URL.
+ * - `overrideHeaders`: A boolean flag indicating whether or not default headers should be include in the request.
  *
  * @name http
  * @type Function
