@@ -89,6 +89,14 @@ test('http `before` is passed request options', () => {
   })
 })
 
+test('http overrides header object if `overrideHeaders` is passed to `before` hook', () => {
+  const before = () => ({ overrideHeaders: true, headers: { foo: 'bar' } })
+  return http(successUrl, { before }).then((res) => {
+    delete res.url
+    expect(res.headers).toEqual({ foo: 'bar' })
+  })
+})
+
 test('http onSuccess hook is called with request result', () => {
   expect.assertions(1)
   const onSuccess = jest.fn()
