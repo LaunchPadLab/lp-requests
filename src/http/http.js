@@ -39,7 +39,7 @@ import {
  * - `successDataPath`: A path to response data that the promise will resolve with.
  * - `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
  * - `query`: An object that will be transformed into a query string and appended to the request URL.
- * - `overrideHeaders`: A boolean flag indicating whether or not default headers should be include in the request (default=`false`).
+ * - `overrideHeaders`: A boolean flag indicating whether or not default headers should be included in the request (default=`false`).
  *
  * @name http
  * @type Function
@@ -85,7 +85,7 @@ function makeRequest (endpoint, options) {
   } = options
   // Build fetch config
   const allHeaders = { ...DEFAULT_OPTIONS.headers, ...getAuthHeaders(bearerToken), ...headers }
-  const requestHeaders = overrideHeaders ? { ...headers } : allHeaders
+  const requestHeaders = overrideHeaders ? headers : allHeaders
   const fetchConfig = omitUndefined({
     ...DEFAULT_OPTIONS,
     headers: requestHeaders,
