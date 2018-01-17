@@ -47,6 +47,6 @@
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
     "query-string": "^5.0.0",
-    "url-join": "^2.0.2"
+    "url-join": "^3.0.0"
   }
 }
