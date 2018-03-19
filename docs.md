@@ -2,17 +2,17 @@
 
 ### Table of Contents
 
--   [api](#api)
--   [configureApi](#configureapi)
--   [configureHttp](#configurehttp)
--   [http](#http)
--   [HttpError](#httperror)
--   [isAuthenticated](#isauthenticated)
--   [getAuthenticationContext](#getauthenticationcontext)
+-   [api][1]
+-   [configureApi][2]
+-   [configureHttp][3]
+-   [http][4]
+-   [HttpError][5]
+-   [isAuthenticated][6]
+-   [getAuthenticationContext][7]
 
 ## api
 
-A lightweight wrapper around the [http](http) module.
+A lightweight wrapper around the [http][8] module.
 Provides functions to make API requests with specified HTTP methods.
 
 The functions are as follows:
@@ -25,10 +25,10 @@ The functions are as follows:
 -   `call(url, method, body, options)` sends a request with specified method
 
 Each function can be passed an `options` object, which will eventually be forwarded
-to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+to the [Fetch API][9].
 
 Each function returns a promise, which will either resolve with a response object
-or reject with an [HTTPError](HTTPError).
+or reject with an [HTTPError][10].
 
 **Examples**
 
@@ -44,15 +44,15 @@ getUsers()
 
 ## configureApi
 
-A function that returns a configured instance of the [api](#api) module.
+A function that returns a configured instance of the [api][1] module.
 This function's argument will be used as the default config for the returned instance.
 
 Note: This configuration can always be overridden by passing in options manually.
 
 **Parameters**
 
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An api configuration object
--   `baseApi` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An existing api instance to extend with the configuration
+-   `config` **[Object][11]** An api configuration object
+-   `baseApi` **[Object][11]?** An existing api instance to extend with the configuration
 
 **Examples**
 
@@ -62,19 +62,19 @@ const myApi = configureApi({ root: 'http://example.com', mode: 'cors' })
 myApi.get('/thing') // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configured api instance
+Returns **[Object][11]** A configured api instance
 
 ## configureHttp
 
-A function that returns a configured instance of the [http](http) module.
+A function that returns a configured instance of the [http][8] module.
 This function's argument will be used as the default config for the returned instance.
 
 Note: This configuration can always be overridden by passing in options manually.
 
 **Parameters**
 
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An http configuration object
--   `baseHttp` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** An existing http instance to extend with the configuration
+-   `config` **[Object][11]** An http configuration object
+-   `baseHttp` **[Object][11]?** An existing http instance to extend with the configuration
 
 **Examples**
 
@@ -84,11 +84,11 @@ const myHttp = configureHttp({ root: 'http://example.com', mode: 'cors' })
 myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** A configured http instance
+Returns **[Object][11]** A configured http instance
 
 ## http
 
-A wrapper function for the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+A wrapper function for the [Fetch API][9]
 that adds default request settings and handles CRSF token logic.
 
 This function adds the following config settings to the given request:
@@ -121,8 +121,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 
 **Parameters**
 
--   `endpoint` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The URL of the request
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
+-   `endpoint` **[String][12]** The URL of the request
+-   `config` **[Object][11]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 **Examples**
 
@@ -139,15 +139,15 @@ getUsers()
    .catch(err => console.log('An error occurred!', err))
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** A Promise that either resolves with the response or rejects with an [HttpError](#httperror).
+Returns **[Promise][13]** A Promise that either resolves with the response or rejects with an [HttpError][5].
 
 ## HttpError
 
 **Extends Error**
 
-An error class that is thrown by the [http](http) module when a request fails.
+An error class that is thrown by the [http][8] module when a request fails.
 
-In addition to the standard [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) attributes, instances of `HttpError` include the following:
+In addition to the standard [Error][14] attributes, instances of `HttpError` include the following:
 
 -   `status`: the status code of the response
 -   `statusText`: the status text of the response
@@ -156,10 +156,10 @@ In addition to the standard [Error](https://developer.mozilla.org/en-US/docs/Web
 
 **Parameters**
 
--   `status` **[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** the status code of the response
--   `statusText` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the status text of the response
--   `response` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the full response object
--   `errors` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** an object containing error messages associated with the response (optional, default `{}`)
+-   `status` **[Number][15]** the status code of the response
+-   `statusText` **[String][12]** the status text of the response
+-   `response` **[Object][11]** the full response object
+-   `errors` **[Object][11]** an object containing error messages associated with the response (optional, default `{}`)
 
 **Examples**
 
@@ -187,7 +187,7 @@ presence, validation must be done on the server.
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** config object containing the context (optional, default `{}`)
+-   `options` **[Object][11]** config object containing the context (optional, default `{}`)
 
 **Examples**
 
@@ -213,7 +213,7 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+Returns **[Boolean][16]** 
 
 ## getAuthenticationContext
 
@@ -239,4 +239,36 @@ getAuthenticationContext() // undefined
 getAuthenticationContext() // undefined
 ```
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+Returns **[String][12]** 
+
+[1]: #api
+
+[2]: #configureapi
+
+[3]: #configurehttp
+
+[4]: #http
+
+[5]: #httperror
+
+[6]: #isauthenticated
+
+[7]: #getauthenticationcontext
+
+[8]: http
+
+[9]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+
+[10]: HTTPError
+
+[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[12]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[14]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
