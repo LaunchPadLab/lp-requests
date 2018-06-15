@@ -41,6 +41,8 @@ import {
  * - `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
  * - `query`: An object that will be transformed into a query string and appended to the request URL.
  * - `overrideHeaders`: A boolean flag indicating whether or not default headers should be included in the request (default=`false`).
+ * - `camelizeResponse`: A boolean flag indicating whether or not to camelize response keys (default=`true`).
+ * - `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
  *
  * @name http
  * @type Function
@@ -77,8 +79,8 @@ function makeRequest (endpoint, options) {
     root,
     csrf=true,
     overrideHeaders=false,
-    camelizeResponse=true, // update docs
-    decamelizeBody=true, // update docs
+    camelizeResponse=true,
+    decamelizeBody=true,
     headers={},
     bearerToken,
     successDataPath,
