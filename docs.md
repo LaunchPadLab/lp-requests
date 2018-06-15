@@ -109,8 +109,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 
 -   `'root'`: A path to be appended to the given endpoint (default=`''`).
 -   `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
--   `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options. 
-     It can also return a promise that resolves to a new options object. 
+-   `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
+     It can also return a promise that resolves to a new options object.
 -   `'bearerToken'`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
 -   `'onSuccess'`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
 -   `'onFailure'`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
@@ -128,8 +128,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 
 ```javascript
 function getUsers () {
-  return http('/users', { 
-     root: 'www.my.cool.api.com', 
+  return http('/users', {
+     root: 'www.my.cool.api.com',
      crsf: 'custom-token-name'
   })
 }

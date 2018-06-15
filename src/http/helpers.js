@@ -37,3 +37,9 @@ function buildQueryString (queryHash) {
   return '?' + stringify(decamelizeKeys(queryHash))
 }
 
+// Stringify body
+export function stringifyBody (body, decamelizeBody) {
+  if (!body) return null
+  const transformedBody = decamelizeBody ? decamelizeKeys(body) : body
+  return JSON.stringify(transformedBody)
+}
