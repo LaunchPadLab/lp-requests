@@ -81,6 +81,7 @@ function makeRequest (endpoint, options) {
     overrideHeaders=false,
     camelizeResponse=true,
     decamelizeBody=true,
+    decamelizeQuery=true,
     headers={},
     bearerToken,
     successDataPath,
@@ -104,7 +105,7 @@ function makeRequest (endpoint, options) {
     if (token) fetchConfig.headers = { ...fetchConfig.headers, 'X-CSRF-Token': token }
   }
   // Build full URL
-  const url = buildUrl({ root, endpoint, query })
+  const url = buildUrl({ root, endpoint, query, decamelizeQuery })
   // Make request
   return fetch(url, { ...fetchConfig, body: stringifiedBody })
     .then(response => response.json()

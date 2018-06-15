@@ -197,6 +197,16 @@ test('http decamelizes query string by default', () => {
   })
 })
 
+test('http does not decamelizes query if decamelizeQuery is false', () => {
+  return http(successUrl, {
+    method: 'POST',
+    query: { foo: 'bar', fooBar: 'baz' },
+    decamelizeQuery: false,
+  }).then((res) => {
+    expect(res.url).toEqual(`${successUrl}?foo=bar&fooBar=baz`)
+  })
+})
+
 test('http camelizes json response by default', () => {
   return http(successUrl, {
     method: 'POST',
