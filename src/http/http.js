@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { isTokenMethod, getToken } from './csrf'
-import { camelizeKeys, decamelizeKeys, omitUndefined, getDataAtPath, noop } from '../utils'
+import { camelizeKeys, omitUndefined, getDataAtPath, noop } from '../utils'
 import HttpError from '../http-error'
 import {
   runBeforeHook,
