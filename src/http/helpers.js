@@ -26,14 +26,21 @@ export function isJSONRequest (config) {
 }
 
 // Build url string from root, endpoint and optional query hash
-export function buildUrl ({ root, endpoint, query }) {
+export function buildUrl ({ root, endpoint, query, decamelizeQuery }) {
   const joinedUrl = root ? join(root, endpoint) : endpoint
-  return joinedUrl + buildQueryString(query)
+  return joinedUrl + buildQueryString(query, decamelizeQuery)
 }
 
 // Decamelize and stringify query hash
-function buildQueryString (queryHash) {
+function buildQueryString (queryHash, decamelizeQuery) {
   if (!queryHash) return ''
-  return '?' + stringify(decamelizeKeys(queryHash))
+  const transformedQuery = decamelizeQuery ? decamelizeKeys(queryHash) : queryHash
+  return '?' + stringify(transformedQuery)
 }
 
+// Stringify body
+export function stringifyBody (body, decamelizeBody) {
+  if (!body) return null
+  const transformedBody = decamelizeBody ? decamelizeKeys(body) : body
+  return JSON.stringify(transformedBody)
+}
