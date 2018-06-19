@@ -90,7 +90,7 @@ Returns **[Object][11]** A configured http instance
 
 A wrapper function for the [Fetch API][9]
 that adds default request settings and handles CRSF token logic.
-
+c
 This function adds the following config settings to the given request:
 
     {

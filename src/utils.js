@@ -57,7 +57,9 @@ export function getDataAtPath (obj, path) {
   return path ? get(path, obj) : obj
 }
 
-// Wrap a value in a Promise if it isn't already
-export function wrapInPromise (value) {
-  return isPromise(value) ? value : Promise.resolve(value)
+export function returnPromise (func) {
+  return (...args) => {
+    const value = func(...args)
+    return isPromise(value) ? value : Promise.resolve(value)
+  }
 }
