@@ -1,20 +1,19 @@
-import { returnPromise } from '../utils'
+import { ensureAsync, asyncReduce } from '../utils'
+import { merge } from 'lodash'
 
-// TODO: refactor this shiz
-function recursivelyCallMiddleware (config, middleware, nextMiddlewares) {
-  if (!middleware) return Promise.resolve(config)
-  const wrappedMiddleware = returnPromise(middleware)
-  return wrappedMiddleware(config).then(result => {
-    const newConfig = result || {}
-    const mergedConfig = { ...config, ...newConfig }
-    const [ next, ...remaining ] = nextMiddlewares
-    return recursivelyCallMiddleware(mergedConfig, next, remaining)
-  })
+function mergeOptions (oldOptions, newOptions) {
+  return merge({}, oldOptions, newOptions || {})
 }
 
-export default function applyConfigMiddleware (...middlewares) {
+function applyConfigMiddleware (...middleware) {
+  const asyncMiddleware = middleware.map(ensureAsync)
   return function parseOptions (options) {
-    const [ next, ...remaining ] = middlewares
-    return recursivelyCallMiddleware(options, next, remaining)
+    return asyncReduce(
+      asyncMiddleware, 
+      (options, middleware) =>  middleware(options).then(newOptions => mergeOptions(options, newOptions)), 
+      options
+    )
   }
 }
+
+export default applyConfigMiddleware

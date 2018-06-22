@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { camelizeKeys, getDataAtPath, noop } from '../utils'
-import { identity } from 'lodash'
+import { camelizeKeys, getDataAtPath, noop, identity } from '../utils'
 import HttpError from '../http-error'
 import applyConfigMiddleware from './apply-config-middleware'
 import {
@@ -17,7 +16,7 @@ import {
  *
  * A wrapper function for the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
  * that adds default request settings and handles CRSF token logic.
- *c
+ *
  * This function adds the following config settings to the given request:
  * ```
  * {
@@ -76,7 +75,7 @@ function http (endpoint, {
   successDataPath,
   failureDataPath='errors',
   ...options
-}) {
+}={}) {
   const parseOptions = applyConfigMiddleware(
     before,
     setDefaults,
