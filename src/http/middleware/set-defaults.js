@@ -10,6 +10,8 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 }
 
+// Sets default request options
+
 function setDefaults ({ headers={}, overrideHeaders=false, ...rest }) {
   return {
     ...DEFAULTS,

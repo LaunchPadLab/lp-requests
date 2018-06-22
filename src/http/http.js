@@ -76,7 +76,8 @@ function http (endpoint, {
   failureDataPath='errors',
   ...options
 }={}) {
-  const parseOptions = applyConfigMiddleware(
+  // Apply config middleware, modifying the options in sequence
+  return applyConfigMiddleware(
     before,
     setDefaults,
     setAuthHeaders,
@@ -85,9 +86,10 @@ function http (endpoint, {
     serializeBody,
     includeCSRFToken,
     filterFetchOptions,
-  )
-  return parseOptions({ endpoint, ...options })
+  )({ endpoint, ...options })
+    // Make the fetch call
     .then(({ endpoint, ...config }) => fetch(endpoint, config))
+    // Parse the response
     .then(res => res.json()
       .then(json => {
         const data = camelizeResponse ? camelizeKeys(json) : json
@@ -96,6 +98,7 @@ function http (endpoint, {
         throw new HttpError(res.status, res.statusText, data, errors)
       })
     )
+    // Call handlers
     .then(onSuccess)
     .catch(e => { throw onFailure(e) })
 }

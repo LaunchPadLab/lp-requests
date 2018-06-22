@@ -1,4 +1,5 @@
 import { pick } from 'lodash'
+import { omitUndefined } from '../../utils'
 
 const FETCH_OPTIONS = [
   'method',
@@ -16,8 +17,12 @@ const FETCH_OPTIONS = [
   'endpoint', // Not a real fetch option but we use it
 ]
 
+// Removes all non-fetch options in preparation for passing to Fetch().
+// This should be the last middleware applied.
+
 function filterFetchOptions (config) {
-  return pick(config, FETCH_OPTIONS)
+  const definedOptions = omitUndefined(config)
+  return pick(definedOptions, FETCH_OPTIONS)
 }
 
 export default filterFetchOptions
