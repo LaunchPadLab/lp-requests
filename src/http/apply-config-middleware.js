@@ -6,7 +6,7 @@ function mergeOptions (oldOptions, newOptions) {
 }
 
 // Creates an option-parsing function that applies each middleware in turn,
-// and merges the results of each into the options. An async reducer is used
+// merging the results into a single config object. An async reducer is used
 // because we want to allow middleware to return promises if they want.
 
 function applyConfigMiddleware (...middleware) {

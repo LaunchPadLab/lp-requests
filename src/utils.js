@@ -57,7 +57,7 @@ export function getDataAtPath (obj, path) {
   return path ? get(path, obj) : obj
 }
 
-// Identity function
+// Identity function (lodash one hasn't been working for some reason)
 export const identity = i => i
 
 // Creates a version of a function that returns a promise if it doesn't already
@@ -68,6 +68,7 @@ export function ensureAsync (func) {
   }
 }
 
+// Async version of array.reduce() that allows the accumulator function to return a promise.
 // https://blog.bloomca.me/2018/01/27/asynchronous-reduce-in-javascript.html
 export function asyncReduce (array, handler, initialValue) {
   return array.reduce(
