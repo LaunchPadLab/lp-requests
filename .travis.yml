@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - '8'
+cache: yarn
+before_script:
+  - 'yarn lint'
+notifications:
+  email: false
+deploy:
+  provider: npm
+  email: dev@launchpadlab.com
+  api_key:
+    secure: uyC7IvfGcxQJLAMZm6u2nfuBN/8yfLiwQKl/3Gv4JNCKrBWCdcmR4tRJYCkhX4FOSVysS4VYCOMgPmtk+ApwlfrWFqqIX2bu+LzrHBrL1srq0nGawT/gBRVBhY5YY/4HOj5C3cl/iG66A2RnN+wHRIvMb0g2PRgACnmqF+xaq/wIbxnvsOb7onPBf6QEZaCN3kG+KYGEyDJ/AYRBDE2NmfcCAZ8YxI6NC3mZ4A3XxSLFjyRuGfs4UkZnB5H8oBgCDwkz63TlL/DkpG+zQPEZl7A+pLI+f/ehdmryEA8GXEqN0flbyjNUzmgDHXPAbEXwRdIGIYJXVaCUpfeSCNhyJbvsjcTlSsmtEoVGiyIFchQvIkufuWNfsFQz0hiwNB5Bs8cSI9ny3LfpYVgHa7I+Rz9Pjg5IRQgmUZA5gTdcML1CqCvz69KPmLBXrzD+XxsNN8zbpBzyfOTWloumixIqYOzjWTlgEOQ08auljoBJQF2wbeEoNTK83csK1cIbBJwv5Wwc0STjPJ4ma7Fpki/5ikczxFUa1DF9VH5TKKWzqzJCNm2eL/flqPvGFzwU2esP/jWlCly9gqaGquR6yZioKT6BXGsHJ673lBVzdvBIpexsPIF2Yhu0LUzFz7NhHrvf63nY9OfAXBJGLtYGI+gbFjYKVklzfMjpZntGm1iJALA=
+  on:
+    branch: master
+  skip_cleanup: true
