@@ -1,7 +1,7 @@
 import { http } from '../src'
 import { successUrl, failureUrl } from 'isomorphic-fetch'
 
-// These tests rely on the mock Fetch() 
+// These tests rely on the mock Fetch()
 // returning options as the response
 
 test('http adds default settings to request', () => {
@@ -89,6 +89,14 @@ test('http `before` is passed request options', () => {
   })
 })
 
+test('http overrides header object if `overrideHeaders` is passed to `before` hook', () => {
+  const before = () => ({ overrideHeaders: true, headers: { foo: 'bar' } })
+  return http(successUrl, { before }).then((res) => {
+    delete res.url
+    expect(res.headers).toEqual({ foo: 'bar' })
+  })
+})
+
 test('http onSuccess hook is called with request result', () => {
   expect.assertions(1)
   const onSuccess = jest.fn()
@@ -123,7 +131,7 @@ test('http onSuccess hook return value used as reject value', () => {
 
 test('http adds auth header if bearer token is provided', () => {
   const TOKEN = 'hello there'
-  return http(successUrl, { 
+  return http(successUrl, {
     bearerToken: TOKEN
   }).then((res) => {
     expect(res.headers.authorization).toEqual(`Bearer ${TOKEN}`)
@@ -189,6 +197,57 @@ test('http decamelizes query string by default', () => {
   })
 })
 
+test('http does not decamelizes query if decamelizeQuery is false', () => {
+  return http(successUrl, {
+    method: 'POST',
+    query: { foo: 'bar', fooBar: 'baz' },
+    decamelizeQuery: false,
+  }).then((res) => {
+    expect(res.url).toEqual(`${successUrl}?foo=bar&fooBar=baz`)
+  })
+})
+
+test('http camelizes json response by default', () => {
+  return http(successUrl, {
+    method: 'POST',
+    camelized_key: 'a camelized key'
+  }).then((res) => {
+    expect(res).toHaveProperty('camelizedKey')
+  })
+})
+
+test('http does not camelizes json response if camelize passed as false', () => {
+  return http(successUrl, {
+    camelizeResponse: false,
+    Capitalized_key: 'a weirdly cased key'
+  }).then((res) => {
+    expect(res).toHaveProperty('Capitalized_key')
+  })
+})
+
+test('http decamelizes json body by default', () => {
+  return http(successUrl, {
+    method: 'POST',
+    body: {
+      camelizedKey: 'a camelized key'
+    }
+  }).then((res) => {
+    expect(JSON.parse(res.body)).toHaveProperty('camelized_key')
+  })
+})
+
+test('http does not decamelizes json body if decamelizedBody passed in as false', () => {
+  return http(successUrl, {
+    method: 'POST',
+    decamelizeBody: false,
+    body: {
+      camelizedKey: 'a camelized key'
+    }
+  }).then((res) => {
+    expect(JSON.parse(res.body)).toHaveProperty('camelizedKey')
+  })
+})
+
 /* MOCK STUFF */
 
 // Mock token elements
@@ -197,7 +256,7 @@ const createTokenTag = (name, content) => {
   tag.name = name
   tag.content = content
   return tag
-} 
+}
 const DEFAULT_TAG_NAME = 'csrf-token'
 const DEFAULT_CSRF_TOKEN = 'DEFAULT_CSRF_TOKEN'
 const CUSTOM_TAG_NAME = 'my custom tag'

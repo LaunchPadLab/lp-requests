@@ -1,8 +1,7 @@
-[ ![Codeship Status for LaunchPadLab/lp-requests](https://app.codeship.com/projects/cb8ca260-2dc8-0135-0f57-027c78821f09/status?branch=master)](https://app.codeship.com/projects/224839) [![Test Coverage](https://codeclimate.com/repos/5938234919c433025b0005c8/badges/9ff8fefde0ac2e620359/coverage.svg)](https://codeclimate.com/repos/5938234919c433025b0005c8/coverage)
+[![NPM version](https://img.shields.io/npm/v/@launchpadlab/lp-requests.svg?style=flat-square)](https://www.npmjs.com/package/@launchpadlab/lp-requests)
 
 # lp-requests
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/LaunchPadLab/lp-requests.svg)](https://greenkeeper.io/)
 Client-side request helpers.
 
 ## Documentation 
