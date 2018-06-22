@@ -3,16 +3,28 @@
 ### Table of Contents
 
 -   [api][1]
--   [configureApi][2]
--   [configureHttp][3]
--   [http][4]
--   [HttpError][5]
--   [isAuthenticated][6]
--   [getAuthenticationContext][7]
+    -   [Examples][2]
+-   [configureApi][3]
+    -   [Parameters][4]
+    -   [Examples][5]
+-   [configureHttp][6]
+    -   [Parameters][7]
+    -   [Examples][8]
+-   [http][9]
+    -   [Parameters][10]
+    -   [Examples][11]
+-   [HttpError][12]
+    -   [Parameters][13]
+    -   [Examples][14]
+-   [isAuthenticated][15]
+    -   [Parameters][16]
+    -   [Examples][17]
+-   [getAuthenticationContext][18]
+    -   [Examples][19]
 
 ## api
 
-A lightweight wrapper around the [http][8] module.
+A lightweight wrapper around the [http][20] module.
 Provides functions to make API requests with specified HTTP methods.
 
 The functions are as follows:
@@ -25,12 +37,12 @@ The functions are as follows:
 -   `call(url, method, body, options)` sends a request with specified method
 
 Each function can be passed an `options` object, which will eventually be forwarded
-to the [Fetch API][9].
+to the [Fetch API][21].
 
 Each function returns a promise, which will either resolve with a response object
-or reject with an [HTTPError][10].
+or reject with an [HTTPError][22].
 
-**Examples**
+### Examples
 
 ```javascript
 function getUsers () {
@@ -49,12 +61,12 @@ This function's argument will be used as the default config for the returned ins
 
 Note: This configuration can always be overridden by passing in options manually.
 
-**Parameters**
+### Parameters
 
--   `config` **[Object][11]** An api configuration object
--   `baseApi` **[Object][11]?** An existing api instance to extend with the configuration
+-   `config` **[Object][23]** An api configuration object
+-   `baseApi` **[Object][23]?** An existing api instance to extend with the configuration
 
-**Examples**
+### Examples
 
 ```javascript
 const myApi = configureApi({ root: 'http://example.com', mode: 'cors' })
@@ -62,21 +74,21 @@ const myApi = configureApi({ root: 'http://example.com', mode: 'cors' })
 myApi.get('/thing') // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object][11]** A configured api instance
+Returns **[Object][23]** A configured api instance
 
 ## configureHttp
 
-A function that returns a configured instance of the [http][8] module.
+A function that returns a configured instance of the [http][20] module.
 This function's argument will be used as the default config for the returned instance.
 
 Note: This configuration can always be overridden by passing in options manually.
 
-**Parameters**
+### Parameters
 
--   `config` **[Object][11]** An http configuration object
--   `baseHttp` **[Object][11]?** An existing http instance to extend with the configuration
+-   `config` **[Object][23]** An http configuration object
+-   `baseHttp` **[Object][23]?** An existing http instance to extend with the configuration
 
-**Examples**
+### Examples
 
 ```javascript
 const myHttp = configureHttp({ root: 'http://example.com', mode: 'cors' })
@@ -84,11 +96,11 @@ const myHttp = configureHttp({ root: 'http://example.com', mode: 'cors' })
 myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object][11]** A configured http instance
+Returns **[Object][23]** A configured http instance
 
 ## http
 
-A wrapper function for the [Fetch API][9]
+A wrapper function for the [Fetch API][21]
 that adds default request settings and handles CRSF token logic.
 
 This function adds the following config settings to the given request:
@@ -122,12 +134,12 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
 
-**Parameters**
+### Parameters
 
--   `endpoint` **[String][12]** The URL of the request
--   `config` **[Object][11]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
+-   `endpoint` **[String][24]** The URL of the request
+-   `config` **[Object][23]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
-**Examples**
+### Examples
 
 ```javascript
 function getUsers () {
@@ -142,29 +154,29 @@ getUsers()
    .catch(err => console.log('An error occurred!', err))
 ```
 
-Returns **[Promise][13]** A Promise that either resolves with the response or rejects with an [HttpError][5].
+Returns **[Promise][25]** A Promise that either resolves with the response or rejects with an [HttpError][12].
 
 ## HttpError
 
 **Extends Error**
 
-An error class that is thrown by the [http][8] module when a request fails.
+An error class that is thrown by the [http][20] module when a request fails.
 
-In addition to the standard [Error][14] attributes, instances of `HttpError` include the following:
+In addition to the standard [Error][26] attributes, instances of `HttpError` include the following:
 
 -   `status`: the status code of the response
 -   `statusText`: the status text of the response
 -   `response`: the full response object
 -   `message`: A readable error message with format `<status> - <statusText>`
 
-**Parameters**
+### Parameters
 
--   `status` **[Number][15]** the status code of the response
--   `statusText` **[String][12]** the status text of the response
--   `response` **[Object][11]** the full response object
--   `errors` **[Object][11]** an object containing error messages associated with the response (optional, default `{}`)
+-   `status` **[Number][27]** the status code of the response
+-   `statusText` **[String][24]** the status text of the response
+-   `response` **[Object][23]** the full response object
+-   `errors` **[Object][23]** an object containing error messages associated with the response (optional, default `{}`)
 
-**Examples**
+### Examples
 
 ```javascript
 // Instantiated manually
@@ -188,11 +200,11 @@ both authenticated and the specified context is present.
 Note, this does not **validate** the token, it only checks for
 presence, validation must be done on the server.
 
-**Parameters**
+### Parameters
 
--   `options` **[Object][11]** config object containing the context (optional, default `{}`)
+-   `options` **[Object][23]** config object containing the context (optional, default `{}`)
 
-**Examples**
+### Examples
 
 ```javascript
 // WITHOUT context
@@ -216,7 +228,7 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean][16]** 
+Returns **[Boolean][28]** 
 
 ## getAuthenticationContext
 
@@ -229,7 +241,7 @@ contains a valid token, and contains a context.
 This function returns `undefined` when there is no context present,
 or if the LP Auth API cookie does not exist.
 
-**Examples**
+### Examples
 
 ```javascript
 // After an 'admin' signs in
@@ -240,38 +252,64 @@ getAuthenticationContext() // undefined
 
 // After sign out
 getAuthenticationContext() // undefined
+
+*
 ```
 
-Returns **[String][12]** 
+Returns **[String][24]** 
 
 [1]: #api
 
-[2]: #configureapi
+[2]: #examples
 
-[3]: #configurehttp
+[3]: #configureapi
 
-[4]: #http
+[4]: #parameters
 
-[5]: #httperror
+[5]: #examples-1
 
-[6]: #isauthenticated
+[6]: #configurehttp
 
-[7]: #getauthenticationcontext
+[7]: #parameters-1
 
-[8]: http
+[8]: #examples-2
 
-[9]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+[9]: #http
 
-[10]: HTTPError
+[10]: #parameters-2
 
-[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[11]: #examples-3
 
-[12]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[12]: #httperror
 
-[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[13]: #parameters-3
 
-[14]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+[14]: #examples-4
 
-[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[15]: #isauthenticated
 
-[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[16]: #parameters-4
+
+[17]: #examples-5
+
+[18]: #getauthenticationcontext
+
+[19]: #examples-6
+
+[20]: http
+
+[21]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+
+[22]: HTTPError
+
+[23]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[26]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
