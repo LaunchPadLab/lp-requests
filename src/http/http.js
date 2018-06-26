@@ -1,14 +1,16 @@
 import fetch from 'isomorphic-fetch'
-import { isTokenMethod, getToken } from './csrf'
-import { camelizeKeys, omitUndefined, getDataAtPath, noop } from '../utils'
+import { camelizeKeys, getDataAtPath, noop, identity } from '../utils'
 import HttpError from '../http-error'
+import applyConfigMiddleware from './apply-config-middleware'
 import {
-  runBeforeHook,
-  getAuthHeaders,
-  isJSONRequest,
-  buildUrl,
-  stringifyBody,
-} from './helpers'
+  setDefaults,
+  setAuthHeaders,
+  addQueryToEndpoint,
+  serializeBody,
+  includeCSRFToken,
+  filterFetchOptions,
+  addRootToEndpoint,
+} from './middleware'
 
 /**
  *
@@ -65,72 +67,40 @@ import {
  *    .catch(err => console.log('An error occurred!', err))
  */
 
-const DEFAULT_OPTIONS = {
-  credentials: 'same-origin',
-  mode: 'same-origin',
-  headers: {
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    'Content-Type': 'application/json',
-  }
-}
-
-function makeRequest (endpoint, options) {
-  const {
-    root,
-    csrf=true,
-    overrideHeaders=false,
-    camelizeResponse=true,
-    decamelizeBody=true,
-    decamelizeQuery=true,
-    headers={},
-    bearerToken,
-    successDataPath,
-    failureDataPath='errors',
-    query,
-    ...rest
-  } = options
-  // Build fetch config
-  const allHeaders = { ...DEFAULT_OPTIONS.headers, ...getAuthHeaders(bearerToken), ...headers }
-  const requestHeaders = overrideHeaders ? headers : allHeaders
-  const fetchConfig = omitUndefined({
-    ...DEFAULT_OPTIONS,
-    headers: requestHeaders,
-    ...rest,
-  })
-  // Decamelize and stringify body if it's a JSON request
-  const stringifiedBody = isJSONRequest(fetchConfig) ? stringifyBody(fetchConfig.body, decamelizeBody) : null
-  // Include token if necessary
-  if (isTokenMethod(fetchConfig.method) && csrf) {
-    const token = getToken(csrf)
-    if (token) fetchConfig.headers = { ...fetchConfig.headers, 'X-CSRF-Token': token }
-  }
-  // Build full URL
-  const url = buildUrl({ root, endpoint, query, decamelizeQuery })
-  // Make request
-  return fetch(url, { ...fetchConfig, body: stringifiedBody })
-    .then(response => response.json()
+function http (endpoint, { 
+  onSuccess=identity, 
+  onFailure=identity,
+  camelizeResponse=true,
+  before=noop,
+  successDataPath,
+  failureDataPath='errors',
+  ...options
+}={}) {
+  // Apply config middleware, modifying the options in sequence
+  return applyConfigMiddleware(
+    before,
+    setDefaults,
+    setAuthHeaders,
+    addRootToEndpoint,
+    addQueryToEndpoint,
+    serializeBody,
+    includeCSRFToken,
+    filterFetchOptions,
+  )({ endpoint, ...options })
+    // Make the fetch call
+    .then(({ endpoint, ...config }) => fetch(endpoint, config))
+    // Parse the response
+    .then(res => res.json()
       .then(json => {
         const data = camelizeResponse ? camelizeKeys(json) : json
-        if (response.ok) return getDataAtPath(data, successDataPath)
+        if (res.ok) return getDataAtPath(data, successDataPath)
         const errors = getDataAtPath(data, failureDataPath)
-        throw new HttpError(response.status, response.statusText, data, errors)
+        throw new HttpError(res.status, res.statusText, data, errors)
       })
     )
-}
-
-function http (endpoint, options={}) {
-  const {
-    before,
-    onSuccess=noop,
-    onFailure=noop,
-    ...rest
-  } = options
-  // Run "before" hook and pull out non-fetch options
-  return runBeforeHook(before, rest)
-    .then(computedOptions => makeRequest(endpoint, computedOptions))
-    .then(res => onSuccess(res) || res)
-    .catch(e => { throw onFailure(e) || e })
+    // Call handlers
+    .then(onSuccess)
+    .catch(e => { throw onFailure(e) })
 }
 
 export default http

@@ -1,6 +1,6 @@
 {
   "name": "@launchpadlab/lp-requests",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Request helpers",
   "main": "lib/index.js",
   "scripts": {

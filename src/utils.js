@@ -57,7 +57,22 @@ export function getDataAtPath (obj, path) {
   return path ? get(path, obj) : obj
 }
 
-// Wrap a value in a Promise if it isn't already
-export function wrapInPromise (value) {
-  return isPromise(value) ? value : Promise.resolve(value)
+// Identity function (lodash one hasn't been working for some reason)
+export const identity = i => i
+
+// Creates a version of a function that returns a promise if it doesn't already
+export function ensureAsync (func) {
+  return (...args) => {
+    const value = func(...args)
+    return isPromise(value) ? value : Promise.resolve(value)
+  }
+}
+
+// Async version of array.reduce() that allows the accumulator function to return a promise.
+// https://blog.bloomca.me/2018/01/27/asynchronous-reduce-in-javascript.html
+export function asyncReduce (array, handler, initialValue) {
+  return array.reduce(
+    (promise, value) => promise.then(acc => Promise.resolve(handler(acc, value))),
+    Promise.resolve(initialValue)
+  )
 }

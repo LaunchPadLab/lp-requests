@@ -66,18 +66,16 @@ test('http prepends custom root to request', () => {
 })
 
 test('http modifies configuration using `before` hook', () => {
-  const before = () => ({ foo: 'bar' })
+  const before = () => ({ method: 'POST' })
   return http(successUrl, { before }).then((res) => {
-    delete res.url
-    expect(res.foo).toEqual('bar')
+    expect(res.method).toEqual('POST')
   })
 })
 
 test('http `before` hook can return a promise', () => {
-  const before = () => Promise.resolve({ foo: 'bar' })
+  const before = () => Promise.resolve({ method: 'POST' })
   return http(successUrl, { before }).then((res) => {
-    delete res.url
-    expect(res.foo).toEqual('bar')
+    expect(res.method).toEqual('POST')
   })
 })
 
@@ -85,7 +83,7 @@ test('http `before` is passed request options', () => {
   const before = jest.fn()
   const myOptions = { my: 'options' }
   return http(successUrl, { before, ...myOptions }).then(() => {
-    expect(before).toHaveBeenCalledWith(myOptions)
+    expect(before).toHaveBeenCalledWith({ endpoint: successUrl, ...myOptions })
   })
 })
 
@@ -99,7 +97,7 @@ test('http overrides header object if `overrideHeaders` is passed to `before` ho
 
 test('http onSuccess hook is called with request result', () => {
   expect.assertions(1)
-  const onSuccess = jest.fn()
+  const onSuccess = jest.fn(i => i)
   return http(successUrl, { onSuccess }).then(res => {
     expect(onSuccess).toHaveBeenCalledWith(res)
   })
@@ -115,7 +113,7 @@ test('http onSuccess hook return value used as resolve value', () => {
 
 test('http onFailure hook is called with request result', () => {
   expect.assertions(1)
-  const onFailure = jest.fn()
+  const onFailure = jest.fn(i => i)
   return http(failureUrl, { onFailure }).catch(e => {
     expect(onFailure).toHaveBeenCalledWith(e)
   })
@@ -236,7 +234,7 @@ test('http decamelizes json body by default', () => {
   })
 })
 
-test('http does not decamelizes json body if decamelizedBody passed in as false', () => {
+test('http does not decamelize json body if decamelizedBody passed in as false', () => {
   return http(successUrl, {
     method: 'POST',
     decamelizeBody: false,
