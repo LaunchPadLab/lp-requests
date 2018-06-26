@@ -133,7 +133,7 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`).
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
--   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][24], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a basic64 encoded string of `username:password`.
+-   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][24], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
 ### Parameters
 
