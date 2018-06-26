@@ -15,8 +15,9 @@ function addAuthHeaders ({
   if (auth) {
     const username = auth.username || ''
     const password = auth.password || ''
+    const encodedToken = Base64.btoa(`${ username }:${ password }`)
     return {
-      headers: { ...headers, 'Authorization': `Basic ${ Base64.btoa(`${ username }:${ password }`) }` }
+      headers: { ...headers, Authorization: `Basic ${ encodedToken }` }
     }
   }
 }
