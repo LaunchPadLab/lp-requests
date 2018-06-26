@@ -252,8 +252,8 @@ test('http sets basic auth header if `useBasicAuth` is true', () => {
     method: 'POST',
     useBasicAuth: true,
     bearerToken,
-  }).then((res) => {
-    expect(res.headers.authorization).toEqual(`Basic ${ bearerToken }`)
+  }).then(res => {
+    expect(res.headers.authorization).toEqual(`Basic ${ window.btoa(bearerToken) }`)
   })
 })
 

@@ -1,10 +1,10 @@
 // Sets auth headers if necessary
 
-function addAuthHeaders ({ bearerToken, headers, overrideHeaders = false, useBasicAuth = false }) {
+function addAuthHeaders ({ bearerToken, headers, overrideHeaders=false, useBasicAuth=false }) {
   if (overrideHeaders || !bearerToken) return
-  const authType = useBasicAuth ? `Basic` : `Bearer`
+  const authHeader = useBasicAuth ? `Basic ${ window.btoa(bearerToken) }` : `Bearer ${ bearerToken }`
   return {
-    headers: { ...headers, 'Authorization': `${ authType } ${ bearerToken }` }
+    headers: { ...headers, 'Authorization': authHeader }
   }
 }
 
