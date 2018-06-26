@@ -1,3 +1,5 @@
+import Base64 from 'Base64'
+
 // Sets auth headers if necessary
 
 function addAuthHeaders ({ 
@@ -7,16 +9,15 @@ function addAuthHeaders ({
   overrideHeaders=false, 
 }) {
   if (overrideHeaders) return
-  let authToken = bearerToken
+  if (bearerToken) return { 
+    headers: { ...headers, Authorization: `Bearer ${ bearerToken }` } 
+  }
   if (auth) {
     const username = auth.username || ''
     const password = auth.password || ''
-    authToken = window.btoa(`${ username }:${ password }`)
-  }
-  if (!authToken) return
-  const authHeader = auth ? `Basic ${ authToken }` : `Bearer ${ authToken }`
-  return {
-    headers: { ...headers, 'Authorization': authHeader }
+    return {
+      headers: { ...headers, 'Authorization': `Basic ${ Base64.btoa(`${ username }:${ password }`) }` }
+    }
   }
 }
 
