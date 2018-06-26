@@ -1,8 +1,22 @@
 // Sets auth headers if necessary
 
-function addAuthHeaders ({ bearerToken, headers, overrideHeaders=false, useBasicAuth=false }) {
-  if (overrideHeaders || !bearerToken) return
-  const authHeader = useBasicAuth ? `Basic ${ window.btoa(bearerToken) }` : `Bearer ${ bearerToken }`
+function addAuthHeaders ({ 
+  auth,
+  bearerToken, 
+  headers, 
+  overrideHeaders=false, 
+}) {
+  if (overrideHeaders) return
+  let authToken = bearerToken
+  if (auth) {
+    const username = auth.username || ''
+    const password = auth.password || ''
+    authToken = window.btoa(`${ username }:${ password }`)
+  }
+  if (!authToken) return
+  const authHeader = auth 
+    ? `Basic ${ authToken }` 
+    : `Bearer ${ authToken }`
   return {
     headers: { ...headers, 'Authorization': authHeader }
   }

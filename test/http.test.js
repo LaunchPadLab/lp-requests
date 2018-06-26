@@ -247,13 +247,16 @@ test('http does not decamelize json body if decamelizedBody passed in as false',
 })
 
 test('http sets basic auth header if `useBasicAuth` is true', () => {
-  const bearerToken = 'MY TOKEN'
+  const username = 'rachel'
+  const password = 'topSecret'
   return http(successUrl, {
     method: 'POST',
-    useBasicAuth: true,
-    bearerToken,
+    auth: {
+      username,
+      password,
+    }
   }).then(res => {
-    expect(res.headers.authorization).toEqual(`Basic ${ window.btoa(bearerToken) }`)
+    expect(res.headers.authorization).toEqual(`Basic ${ window.btoa(`${ username }:${ password }`) }`)
   })
 })
 
