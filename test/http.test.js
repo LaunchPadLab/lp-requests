@@ -1,5 +1,6 @@
-import { http } from '../src'
+import Base64 from 'Base64'
 import { successUrl, failureUrl } from 'isomorphic-fetch'
+import { http } from '../src'
 
 // These tests rely on the mock Fetch()
 // returning options as the response
@@ -243,6 +244,20 @@ test('http does not decamelize json body if decamelizedBody passed in as false',
     }
   }).then((res) => {
     expect(JSON.parse(res.body)).toHaveProperty('camelizedKey')
+  })
+})
+
+test('http sets basic auth header if `auth` is present', () => {
+  const username = 'rachel'
+  const password = 'topSecret'
+  return http(successUrl, {
+    method: 'POST',
+    auth: {
+      username,
+      password,
+    }
+  }).then(res => {
+    expect(res.headers.authorization).toEqual(`Basic ${ Base64.btoa(`${ username }:${ password }`) }`)
   })
 })
 

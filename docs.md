@@ -133,10 +133,11 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`).
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
+-   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][24], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
 ### Parameters
 
--   `endpoint` **[String][24]** The URL of the request
+-   `endpoint` **[String][25]** The URL of the request
 -   `config` **[Object][23]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 ### Examples
@@ -154,7 +155,7 @@ getUsers()
    .catch(err => console.log('An error occurred!', err))
 ```
 
-Returns **[Promise][25]** A Promise that either resolves with the response or rejects with an [HttpError][12].
+Returns **[Promise][26]** A Promise that either resolves with the response or rejects with an [HttpError][12].
 
 ## HttpError
 
@@ -162,7 +163,7 @@ Returns **[Promise][25]** A Promise that either resolves with the response or re
 
 An error class that is thrown by the [http][20] module when a request fails.
 
-In addition to the standard [Error][26] attributes, instances of `HttpError` include the following:
+In addition to the standard [Error][27] attributes, instances of `HttpError` include the following:
 
 -   `status`: the status code of the response
 -   `statusText`: the status text of the response
@@ -171,8 +172,8 @@ In addition to the standard [Error][26] attributes, instances of `HttpError` inc
 
 ### Parameters
 
--   `status` **[Number][27]** the status code of the response
--   `statusText` **[String][24]** the status text of the response
+-   `status` **[Number][28]** the status code of the response
+-   `statusText` **[String][25]** the status text of the response
 -   `response` **[Object][23]** the full response object
 -   `errors` **[Object][23]** an object containing error messages associated with the response (optional, default `{}`)
 
@@ -228,7 +229,7 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean][28]** 
+Returns **[Boolean][29]** 
 
 ## getAuthenticationContext
 
@@ -256,7 +257,7 @@ getAuthenticationContext() // undefined
 *
 ```
 
-Returns **[String][24]** 
+Returns **[String][25]** 
 
 [1]: #api
 
@@ -304,12 +305,14 @@ Returns **[String][24]**
 
 [23]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[24]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[24]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
 
-[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[26]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[27]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
