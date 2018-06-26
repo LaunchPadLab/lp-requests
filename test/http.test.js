@@ -246,6 +246,17 @@ test('http does not decamelize json body if decamelizedBody passed in as false',
   })
 })
 
+test('http sets basic auth header if `useBasicAuth` is true', () => {
+  const bearerToken = 'MY TOKEN'
+  return http(successUrl, {
+    method: 'POST',
+    useBasicAuth: true,
+    bearerToken,
+  }).then((res) => {
+    expect(res.headers.authorization).toEqual(`Basic ${ bearerToken }`)
+  })
+})
+
 /* MOCK STUFF */
 
 // Mock token elements
