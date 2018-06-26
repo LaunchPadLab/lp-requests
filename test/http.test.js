@@ -246,7 +246,7 @@ test('http does not decamelize json body if decamelizedBody passed in as false',
   })
 })
 
-test('http sets basic auth header if `useBasicAuth` is true', () => {
+test('http sets basic auth header if `auth` is present', () => {
   const username = 'rachel'
   const password = 'topSecret'
   return http(successUrl, {

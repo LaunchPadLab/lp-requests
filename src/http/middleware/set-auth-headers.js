@@ -14,9 +14,7 @@ function addAuthHeaders ({
     authToken = window.btoa(`${ username }:${ password }`)
   }
   if (!authToken) return
-  const authHeader = auth 
-    ? `Basic ${ authToken }` 
-    : `Bearer ${ authToken }`
+  const authHeader = auth ? `Basic ${ authToken }` : `Bearer ${ authToken }`
   return {
     headers: { ...headers, 'Authorization': authHeader }
   }
