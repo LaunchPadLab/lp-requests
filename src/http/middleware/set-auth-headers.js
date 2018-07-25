@@ -1,4 +1,4 @@
-import Base64 from 'Base64'
+import Base64 from 'base-64'
 
 // Sets auth headers if necessary
 
@@ -15,7 +15,7 @@ function addAuthHeaders ({
   if (auth) {
     const username = auth.username || ''
     const password = auth.password || ''
-    const encodedToken = Base64.btoa(`${ username }:${ password }`)
+    const encodedToken = Base64.encode(`${ username }:${ password }`)
     return {
       headers: { ...headers, Authorization: `Basic ${ encodedToken }` }
     }

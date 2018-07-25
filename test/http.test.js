@@ -1,4 +1,4 @@
-import Base64 from 'Base64'
+import Base64 from 'base-64'
 import { successUrl, failureUrl } from 'isomorphic-fetch'
 import { http } from '../src'
 
@@ -257,7 +257,7 @@ test('http sets basic auth header if `auth` is present', () => {
       password,
     }
   }).then(res => {
-    expect(res.headers.authorization).toEqual(`Basic ${ Base64.btoa(`${ username }:${ password }`) }`)
+    expect(res.headers.authorization).toEqual(`Basic ${ Base64.encode(`${ username }:${ password }`) }`)
   })
 })
 
