@@ -40,8 +40,8 @@
     "rimraf": "^2.5.4"
   },
   "dependencies": {
-    "Base64": "^1.0.1",
     "babel-preset-react": "^6.24.1",
+    "base-64": "^0.1.0",
     "humps": "^2.0.0",
     "is-promise": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
