@@ -1,6 +1,6 @@
 import Base64 from 'Base64'
 import { successUrl, failureUrl } from 'isomorphic-fetch'
-import { http } from '../src'
+import { http } from '../../src'
 
 // These tests rely on the mock Fetch()
 // returning options as the response

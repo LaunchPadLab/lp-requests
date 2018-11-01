@@ -10,21 +10,24 @@
 -   [configureHttp][6]
     -   [Parameters][7]
     -   [Examples][8]
--   [http][9]
+-   [composeMiddleware][9]
     -   [Parameters][10]
     -   [Examples][11]
--   [HttpError][12]
+-   [http][12]
     -   [Parameters][13]
     -   [Examples][14]
--   [isAuthenticated][15]
+-   [HttpError][15]
     -   [Parameters][16]
     -   [Examples][17]
--   [getAuthenticationContext][18]
-    -   [Examples][19]
+-   [isAuthenticated][18]
+    -   [Parameters][19]
+    -   [Examples][20]
+-   [getAuthenticationContext][21]
+    -   [Examples][22]
 
 ## api
 
-A lightweight wrapper around the [http][20] module.
+A lightweight wrapper around the [http][23] module.
 Provides functions to make API requests with specified HTTP methods.
 
 The functions are as follows:
@@ -37,10 +40,10 @@ The functions are as follows:
 -   `call(url, method, body, options)` sends a request with specified method
 
 Each function can be passed an `options` object, which will eventually be forwarded
-to the [Fetch API][21].
+to the [Fetch API][24].
 
 Each function returns a promise, which will either resolve with a response object
-or reject with an [HTTPError][22].
+or reject with an [HTTPError][25].
 
 ### Examples
 
@@ -63,8 +66,8 @@ Note: This configuration can always be overridden by passing in options manually
 
 ### Parameters
 
--   `config` **[Object][23]** An api configuration object
--   `baseApi` **[Object][23]?** An existing api instance to extend with the configuration
+-   `config` **[Object][26]** An api configuration object
+-   `baseApi` **[Object][26]?** An existing api instance to extend with the configuration
 
 ### Examples
 
@@ -74,19 +77,19 @@ const myApi = configureApi({ root: 'http://example.com', mode: 'cors' })
 myApi.get('/thing') // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object][23]** A configured api instance
+Returns **[Object][26]** A configured api instance
 
 ## configureHttp
 
-A function that returns a configured instance of the [http][20] module.
+A function that returns a configured instance of the [http][23] module.
 This function's argument will be used as the default config for the returned instance.
 
 Note: This configuration can always be overridden by passing in options manually.
 
 ### Parameters
 
--   `config` **[Object][23]** An http configuration object
--   `baseHttp` **[Object][23]?** An existing http instance to extend with the configuration
+-   `config` **[Object][26]** An http configuration object
+-   `baseHttp` **[Object][26]?** An existing http instance to extend with the configuration
 
 ### Examples
 
@@ -96,11 +99,45 @@ const myHttp = configureHttp({ root: 'http://example.com', mode: 'cors' })
 myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://example.com/thing"
 ```
 
-Returns **[Object][23]** A configured http instance
+Returns **[Object][26]** A configured http instance
+
+## composeMiddleware
+
+A utility function that composes multiple request middlewares into a single function.
+This can be used to create more complex `before` hooks for [http][23].
+
+### Parameters
+
+-   `middlewares` **...[Function][27]** Functions that receive and return request options
+
+### Examples
+
+```javascript
+function addBearerToken () {
+   const token = getTokenFromStorage()
+   if (token) return { bearerToken: token }
+}
+
+function addPathToEndpoint ({ endpoint }) {
+   return {
+     endpoint: endpoint + '/some-path'
+   }
+}
+
+const before = composeMiddleware(
+   addBearerToken,
+   addPathToEndpoint,
+)
+
+// this will call both middlewares before the request
+http('/users', { before })
+```
+
+Returns **[Function][27]** A composed middleware function
 
 ## http
 
-A wrapper function for the [Fetch API][21]
+A wrapper function for the [Fetch API][24]
 that adds default request settings and handles CRSF token logic.
 
 This function adds the following config settings to the given request:
@@ -133,12 +170,12 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`).
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
--   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][24], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
+-   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
 ### Parameters
 
--   `endpoint` **[String][25]** The URL of the request
--   `config` **[Object][23]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
+-   `endpoint` **[String][29]** The URL of the request
+-   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 ### Examples
 
@@ -155,15 +192,15 @@ getUsers()
    .catch(err => console.log('An error occurred!', err))
 ```
 
-Returns **[Promise][26]** A Promise that either resolves with the response or rejects with an [HttpError][12].
+Returns **[Promise][30]** A Promise that either resolves with the response or rejects with an [HttpError][15].
 
 ## HttpError
 
 **Extends Error**
 
-An error class that is thrown by the [http][20] module when a request fails.
+An error class that is thrown by the [http][23] module when a request fails.
 
-In addition to the standard [Error][27] attributes, instances of `HttpError` include the following:
+In addition to the standard [Error][31] attributes, instances of `HttpError` include the following:
 
 -   `status`: the status code of the response
 -   `statusText`: the status text of the response
@@ -172,10 +209,10 @@ In addition to the standard [Error][27] attributes, instances of `HttpError` inc
 
 ### Parameters
 
--   `status` **[Number][28]** the status code of the response
--   `statusText` **[String][25]** the status text of the response
--   `response` **[Object][23]** the full response object
--   `errors` **[Object][23]** an object containing error messages associated with the response (optional, default `{}`)
+-   `status` **[Number][32]** the status code of the response
+-   `statusText` **[String][29]** the status text of the response
+-   `response` **[Object][26]** the full response object
+-   `errors` **[Object][26]** an object containing error messages associated with the response (optional, default `{}`)
 
 ### Examples
 
@@ -203,7 +240,7 @@ presence, validation must be done on the server.
 
 ### Parameters
 
--   `options` **[Object][23]** config object containing the context (optional, default `{}`)
+-   `options` **[Object][26]** config object containing the context (optional, default `{}`)
 
 ### Examples
 
@@ -229,7 +266,7 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean][29]** 
+Returns **[Boolean][33]** 
 
 ## getAuthenticationContext
 
@@ -257,7 +294,7 @@ getAuthenticationContext() // undefined
 *
 ```
 
-Returns **[String][25]** 
+Returns **[String][29]** 
 
 [1]: #api
 
@@ -275,44 +312,52 @@ Returns **[String][25]**
 
 [8]: #examples-2
 
-[9]: #http
+[9]: #composemiddleware
 
 [10]: #parameters-2
 
 [11]: #examples-3
 
-[12]: #httperror
+[12]: #http
 
 [13]: #parameters-3
 
 [14]: #examples-4
 
-[15]: #isauthenticated
+[15]: #httperror
 
 [16]: #parameters-4
 
 [17]: #examples-5
 
-[18]: #getauthenticationcontext
+[18]: #isauthenticated
 
-[19]: #examples-6
+[19]: #parameters-5
 
-[20]: http
+[20]: #examples-6
 
-[21]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+[21]: #getauthenticationcontext
 
-[22]: HTTPError
+[22]: #examples-7
 
-[23]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[23]: http
 
-[24]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
+[24]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
-[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[25]: HTTPError
 
-[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[27]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[28]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[31]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+
+[32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean

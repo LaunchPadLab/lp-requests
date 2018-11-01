@@ -1,7 +1,7 @@
 export { default as api } from './api'
 export { default as configureApi } from './configure-api'
 export { default as configureHttp } from './configure-http'
-export { default as http } from './http'
+export { composeMiddleware, http } from './http'
 export { default as HttpError } from './http-error'
 export { default as isAuthenticated } from './is-authenticated'
 export { default as getAuthenticationContext } from './get-authentication-context'

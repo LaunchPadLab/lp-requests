@@ -1,1 +1,2 @@
-export { default } from './http'
+export composeMiddleware from './compose-middleware'
+export http from './http'
