@@ -10,10 +10,10 @@
 -   [configureHttp][6]
     -   [Parameters][7]
     -   [Examples][8]
--   [composeMiddleware][9]
+-   [http][9]
     -   [Parameters][10]
     -   [Examples][11]
--   [http][12]
+-   [composeMiddleware][12]
     -   [Parameters][13]
     -   [Examples][14]
 -   [HttpError][15]
@@ -101,40 +101,6 @@ myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://ex
 
 Returns **[Object][26]** A configured http instance
 
-## composeMiddleware
-
-A utility function that composes multiple request middlewares into a single function.
-This can be used to create more complex `before` hooks for [http][23].
-
-### Parameters
-
--   `middlewares` **...[Function][27]** Functions that receive and return request options
-
-### Examples
-
-```javascript
-function addBearerToken () {
-   const token = getTokenFromStorage()
-   if (token) return { bearerToken: token }
-}
-
-function addPathToEndpoint ({ endpoint }) {
-   return {
-     endpoint: endpoint + '/some-path'
-   }
-}
-
-const before = composeMiddleware(
-   addBearerToken,
-   addPathToEndpoint,
-)
-
-// this will call both middlewares before the request
-http('/users', { before })
-```
-
-Returns **[Function][27]** A composed middleware function
-
 ## http
 
 A wrapper function for the [Fetch API][24]
@@ -170,11 +136,11 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`).
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
--   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
+-   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][27], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
 ### Parameters
 
--   `endpoint` **[String][29]** The URL of the request
+-   `endpoint` **[String][28]** The URL of the request
 -   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 ### Examples
@@ -192,7 +158,41 @@ getUsers()
    .catch(err => console.log('An error occurred!', err))
 ```
 
-Returns **[Promise][30]** A Promise that either resolves with the response or rejects with an [HttpError][15].
+Returns **[Promise][29]** A Promise that either resolves with the response or rejects with an [HttpError][15].
+
+## composeMiddleware
+
+A utility function that composes multiple request middlewares into a single function.
+This can be used to create more complex `before` hooks for [http][23].
+
+### Parameters
+
+-   `middlewares` **...[Function][30]** Functions that receive and return request options
+
+### Examples
+
+```javascript
+function addBearerToken () {
+   const token = getTokenFromStorage()
+   if (token) return { bearerToken: token }
+}
+
+function addPathToEndpoint ({ endpoint }) {
+   return {
+     endpoint: endpoint + '/some-path'
+   }
+}
+
+const before = composeMiddleware(
+   addBearerToken,
+   addPathToEndpoint,
+)
+
+// this will call both middlewares before the request
+http('/users', { before })
+```
+
+Returns **[Function][30]** A composed middleware function
 
 ## HttpError
 
@@ -210,7 +210,7 @@ In addition to the standard [Error][31] attributes, instances of `HttpError` inc
 ### Parameters
 
 -   `status` **[Number][32]** the status code of the response
--   `statusText` **[String][29]** the status text of the response
+-   `statusText` **[String][28]** the status text of the response
 -   `response` **[Object][26]** the full response object
 -   `errors` **[Object][26]** an object containing error messages associated with the response (optional, default `{}`)
 
@@ -294,7 +294,7 @@ getAuthenticationContext() // undefined
 *
 ```
 
-Returns **[String][29]** 
+Returns **[String][28]** 
 
 [1]: #api
 
@@ -312,13 +312,13 @@ Returns **[String][29]**
 
 [8]: #examples-2
 
-[9]: #composemiddleware
+[9]: #http
 
 [10]: #parameters-2
 
 [11]: #examples-3
 
-[12]: #http
+[12]: #composemiddleware
 
 [13]: #parameters-3
 
@@ -348,13 +348,13 @@ Returns **[String][29]**
 
 [26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[27]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
 
-[28]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
 [31]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
 
