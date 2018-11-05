@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { camelizeKeys, getDataAtPath, noop, identity } from '../utils'
 import HttpError from '../http-error'
-import applyConfigMiddleware from './apply-config-middleware'
+import composeMiddleware from './compose-middleware'
 import {
   setDefaults,
   setAuthHeaders,
@@ -78,7 +78,7 @@ function http (endpoint, {
   ...options
 }={}) {
   // Apply config middleware, modifying the options in sequence
-  return applyConfigMiddleware(
+  return composeMiddleware(
     before,
     setDefaults,
     setAuthHeaders,
