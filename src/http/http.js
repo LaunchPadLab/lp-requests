@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { camelizeKeys, getDataAtPath, noop, identity } from '../utils'
+import { camelizeKeys, getDataAtPath, noop } from '../utils'
 import HttpError from '../http-error'
 import composeMiddleware from './compose-middleware'
 import {
@@ -8,7 +8,7 @@ import {
   addQueryToEndpoint,
   serializeBody,
   includeCSRFToken,
-  filterFetchOptions,
+  extractFetchOptions,
   addRootToEndpoint,
 } from './middleware'
 
@@ -68,17 +68,13 @@ import {
  *    .catch(err => console.log('An error occurred!', err))
  */
 
-function http (endpoint, { 
-  onSuccess=identity, 
-  onFailure=identity,
-  camelizeResponse=true,
-  before=noop,
-  successDataPath,
-  failureDataPath='errors',
+async function http (endpoint, { 
+  before=noop, 
+  __mock_response, // used for unit testing
   ...options
 }={}) {
-  // Apply config middleware, modifying the options in sequence
-  return composeMiddleware(
+
+  const parsedOptions = await composeMiddleware(
     before,
     setDefaults,
     setAuthHeaders,
@@ -86,22 +82,31 @@ function http (endpoint, {
     addQueryToEndpoint,
     serializeBody,
     includeCSRFToken,
-    filterFetchOptions,
+    extractFetchOptions,
   )({ endpoint, ...options })
-    // Make the fetch call
-    .then(({ endpoint, ...config }) => fetch(endpoint, config))
+
+  const {
+    onSuccess, 
+    onFailure,
+    camelizeResponse,
+    successDataPath,
+    failureDataPath,
+    endpoint: url,
+    fetchOptions,
+  } = parsedOptions
+
+  try {
+    // Make request
+    const response = await fetch(url, fetchOptions)
+    const json = __mock_response || await response.json()
     // Parse the response
-    .then(res => res.json()
-      .then(json => {
-        const data = camelizeResponse ? camelizeKeys(json) : json
-        if (res.ok) return getDataAtPath(data, successDataPath)
-        const errors = getDataAtPath(data, failureDataPath)
-        throw new HttpError(res.status, res.statusText, data, errors)
-      })
-    )
-    // Call handlers
-    .then(onSuccess)
-    .catch(e => { throw onFailure(e) })
+    const data = camelizeResponse ? camelizeKeys(json) : json
+    if (response.ok) return onSuccess(getDataAtPath(data, successDataPath))
+    const errors = getDataAtPath(data, failureDataPath)
+    throw new HttpError(response.status, response.statusText, data, errors)
+  } catch (e) {
+    throw onFailure(e)
+  }
 }
 
 export default http

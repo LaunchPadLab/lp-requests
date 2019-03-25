@@ -1,7 +1,12 @@
+import { identity } from '../../utils'
 
 const DEFAULTS = {
   credentials: 'same-origin',
   mode: 'same-origin',
+  onSuccess: identity, 
+  onFailure: identity,
+  camelizeResponse: true,
+  failureDataPath: 'errors',
 }
 
 const DEFAULT_HEADERS = {

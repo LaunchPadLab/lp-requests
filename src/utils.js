@@ -70,9 +70,10 @@ export function ensureAsync (func) {
 
 // Async version of array.reduce() that allows the accumulator function to return a promise.
 // https://blog.bloomca.me/2018/01/27/asynchronous-reduce-in-javascript.html
-export function asyncReduce (array, handler, initialValue) {
-  return array.reduce(
-    (promise, value) => promise.then(acc => Promise.resolve(handler(acc, value))),
-    Promise.resolve(initialValue)
-  )
+export async function asyncReduce (array, handler, initialValue) {
+  let result = initialValue
+  for (let value of array) {
+    result = await handler(result, value)
+  }
+  return result
 }

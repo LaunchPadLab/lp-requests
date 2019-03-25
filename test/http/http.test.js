@@ -66,10 +66,17 @@ test('http prepends custom root to request', () => {
   })
 })
 
-test('http modifies configuration using `before` hook', () => {
+test('http modifies fetch configuration using `before` hook', () => {
   const before = () => ({ method: 'POST' })
   return http(successUrl, { before }).then((res) => {
     expect(res.method).toEqual('POST')
+  })
+})
+
+test('http modifies overall configuration using `before` hook', () => {
+  const before = () => ({ successDataPath: 'foo' })
+  return http(successUrl, { before, __mock_response: { foo: 'bar' } }).then((res) => {
+    expect(res).toEqual('bar')
   })
 })
 
@@ -160,7 +167,9 @@ test('http failureDataPath defaults to "errors"', () => {
   const ERRORS = { 'someValue': 'there was an error' }
   return http(failureUrl, {
     method: 'POST',
-    errors: ERRORS,
+    __mock_response: {
+      errors: ERRORS,
+    }
   }).catch((err) => {
     expect(err.errors).toEqual(ERRORS)
   })
@@ -209,7 +218,9 @@ test('http does not decamelizes query if decamelizeQuery is false', () => {
 test('http camelizes json response by default', () => {
   return http(successUrl, {
     method: 'POST',
-    camelized_key: 'a camelized key'
+    __mock_response: {
+      camelized_key: 'a camelized key'
+    },
   }).then((res) => {
     expect(res).toHaveProperty('camelizedKey')
   })
@@ -218,7 +229,9 @@ test('http camelizes json response by default', () => {
 test('http does not camelizes json response if camelize passed as false', () => {
   return http(successUrl, {
     camelizeResponse: false,
-    Capitalized_key: 'a weirdly cased key'
+    __mock_response: {
+      Capitalized_key: 'a weirdly cased key'
+    }
   }).then((res) => {
     expect(res).toHaveProperty('Capitalized_key')
   })

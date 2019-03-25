@@ -42,7 +42,10 @@ function composeMiddleware (...middlewares) {
   return function callMiddleware (initialValue) {
     return asyncReduce(
       asyncMiddlewares,
-      (acc, middleware) => middleware(acc).then(result => merge(acc, result || {})),
+      async (acc, middleware) => {
+        const result = await middleware(acc)
+        return merge(acc, result || {})
+      },
       initialValue
     )
   }
