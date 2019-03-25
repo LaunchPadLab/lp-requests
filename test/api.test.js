@@ -42,10 +42,10 @@ test('api.call() adds passed method to request options', () => {
 
 test('api methods pass provided body and options to request', () => {
   const body = { foo: true }
-  const options = { customOption: 5 }
+  const options = { mode: 'foo' }
   return api.post(successUrl, body, options).then((res) => {
     expect(res.method).toEqual('POST')
     expect(res.body).toEqual(JSON.stringify(body))
-    expect(res.customOption).toEqual(5)
+    expect(res.mode).toEqual('foo')
   })
 })
