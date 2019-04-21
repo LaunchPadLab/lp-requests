@@ -13,6 +13,7 @@ export { default as unset } from 'lodash/fp/unset'
 export { default as compose } from 'lodash/fp/compose'
 export { default as noop } from 'lodash/noop'
 export { default as union } from 'lodash/union'
+export { default as isString } from 'lodash/isString'
 
 // A wrapper around the humps library
 // Converts all keys of the given object to camelCase

@@ -1,15 +1,15 @@
 import fetch from 'isomorphic-fetch'
-import { camelizeKeys, getDataAtPath, noop } from '../utils'
+import { camelizeKeys, getDataAtPath, noop, isString } from '../utils'
 import HttpError from '../http-error'
 import composeMiddleware from './compose-middleware'
 import {
   setDefaults,
   setAuthHeaders,
-  addQueryToEndpoint,
+  addQueryToUrl,
   serializeBody,
   includeCSRFToken,
   extractFetchOptions,
-  addRootToEndpoint,
+  addRootToUrl,
 } from './middleware'
 
 /**
@@ -32,7 +32,8 @@ import {
  * Any one of these settings can be overriden using the passed-in config object.
  *
  * In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
- * - `'root'`: A path to be appended to the given endpoint (default=`''`).
+ * - `'url'`: The url for the request. This can also be passed in directly as the first argument (see shorthand example).
+ * - `'root'`: A path to be appended to the given url (default=`''`).
  * - `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
  * - `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
  *    It can also return a promise that resolves to a new options object.
@@ -50,14 +51,14 @@ import {
  *
  * @name http
  * @type Function
- * @param {String} endpoint - The URL of the request
  * @param {Object} config - An object containing config information for the `Fetch` request, as well as the extra keys noted above.
  * @returns {Promise} A Promise that either resolves with the response or rejects with an {@link HttpError}.
  *
  * @example
  *
  * function getUsers () {
- *   return http('/users', {
+ *   return http({
+ *      url: '/users',
  *      root: 'www.my.cool.api.com',
  *      crsf: 'custom-token-name'
  *   })
@@ -66,24 +67,41 @@ import {
  * getUsers()
  *    .then(res => console.log('The users are', res))
  *    .catch(err => console.log('An error occurred!', err))
+ * 
+ * // Shorthand: pass `url` as first argument:
+ * function getUsers () {
+ *   return http('/users', options)
+ * }
+ * 
  */
 
-async function http (endpoint, { 
-  before=noop, 
-  __mock_response, // used for unit testing
-  ...options
-}={}) {
+// Enable shorthand with optional string `url` first argument.
+export function parseArguments (...args) {
+  const [ firstArg, secondArg ] = args
+  const hasUrlArgument = isString(firstArg)
+  if (!hasUrlArgument) return firstArg || {}
+  const options = secondArg || {}
+  return { ...options, url: firstArg }
+}
 
+async function http (...args) {
+
+  const { 
+    before=noop,
+    __mock_response, // used for unit testing
+    ...options
+  } = parseArguments(...args)
+  
   const parsedOptions = await composeMiddleware(
     before,
     setDefaults,
     setAuthHeaders,
-    addRootToEndpoint,
-    addQueryToEndpoint,
+    addRootToUrl,
+    addQueryToUrl,
     serializeBody,
     includeCSRFToken,
     extractFetchOptions,
-  )({ endpoint, ...options })
+  )(options)
 
   const {
     onSuccess, 
@@ -91,7 +109,7 @@ async function http (endpoint, {
     camelizeResponse,
     successDataPath,
     failureDataPath,
-    endpoint: url,
+    url,
     fetchOptions,
   } = parsedOptions
 

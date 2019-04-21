@@ -122,7 +122,8 @@ Any one of these settings can be overriden using the passed-in config object.
 
 In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
 
--   `'root'`: A path to be appended to the given endpoint (default=`''`).
+-   `'url'`: The url for the request. This can also be passed in directly as the first argument (see shorthand example).
+-   `'root'`: A path to be appended to the given url (default=`''`).
 -   `'crsf'`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
 -   `'before'`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
      It can also return a promise that resolves to a new options object.
@@ -140,14 +141,14 @@ In addition to the normal Fetch API settings, the config object may also contain
 
 ### Parameters
 
--   `endpoint` **[String][28]** The URL of the request
 -   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 ### Examples
 
 ```javascript
 function getUsers () {
-  return http('/users', {
+  return http({
+     url: '/users',
      root: 'www.my.cool.api.com',
      crsf: 'custom-token-name'
   })
@@ -156,9 +157,14 @@ function getUsers () {
 getUsers()
    .then(res => console.log('The users are', res))
    .catch(err => console.log('An error occurred!', err))
+
+// Shorthand: pass `url` as first argument:
+function getUsers () {
+  return http('/users', options)
+}
 ```
 
-Returns **[Promise][29]** A Promise that either resolves with the response or rejects with an [HttpError][15].
+Returns **[Promise][28]** A Promise that either resolves with the response or rejects with an [HttpError][15].
 
 ## composeMiddleware
 
@@ -167,7 +173,7 @@ This can be used to create more complex `before` hooks for [http][23].
 
 ### Parameters
 
--   `middlewares` **...[Function][30]** Functions that receive and return request options
+-   `middlewares` **...[Function][29]** Functions that receive and return request options
 
 ### Examples
 
@@ -177,22 +183,22 @@ function addBearerToken () {
    if (token) return { bearerToken: token }
 }
 
-function addPathToEndpoint ({ endpoint }) {
+function addPathToUrl ({ url }) {
    return {
-     endpoint: endpoint + '/some-path'
+     url: url + '/some-path'
    }
 }
 
 const before = composeMiddleware(
    addBearerToken,
-   addPathToEndpoint,
+   addPathToUrl,
 )
 
 // this will call both middlewares before the request
 http('/users', { before })
 ```
 
-Returns **[Function][30]** A composed middleware function
+Returns **[Function][29]** A composed middleware function
 
 ## HttpError
 
@@ -200,7 +206,7 @@ Returns **[Function][30]** A composed middleware function
 
 An error class that is thrown by the [http][23] module when a request fails.
 
-In addition to the standard [Error][31] attributes, instances of `HttpError` include the following:
+In addition to the standard [Error][30] attributes, instances of `HttpError` include the following:
 
 -   `status`: the status code of the response
 -   `statusText`: the status text of the response
@@ -209,8 +215,8 @@ In addition to the standard [Error][31] attributes, instances of `HttpError` inc
 
 ### Parameters
 
--   `status` **[Number][32]** the status code of the response
--   `statusText` **[String][28]** the status text of the response
+-   `status` **[Number][31]** the status code of the response
+-   `statusText` **[String][32]** the status text of the response
 -   `response` **[Object][26]** the full response object
 -   `errors` **[Object][26]** an object containing error messages associated with the response (optional, default `{}`)
 
@@ -294,7 +300,7 @@ getAuthenticationContext() // undefined
 *
 ```
 
-Returns **[String][28]** 
+Returns **[String][32]** 
 
 [1]: #api
 
@@ -350,14 +356,14 @@ Returns **[String][28]**
 
 [27]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[30]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
 
-[31]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
 [33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
