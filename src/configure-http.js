@@ -1,4 +1,4 @@
-import http from './http'
+import http, { parseArguments } from './http'
 
 /**
  * 
@@ -23,8 +23,9 @@ import http from './http'
  */
 
 function configureHttp (defaults, baseHttp=http) {
-  return function configuredHttp (endpoint, options) {
-    return baseHttp(endpoint, { ...defaults, ...options })
+  return function configuredHttp (...args) {
+    const options = parseArguments(...args)
+    return baseHttp({ ...defaults, ...options })
   }
 }
 

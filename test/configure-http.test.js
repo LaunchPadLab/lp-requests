@@ -12,6 +12,14 @@ test('configureHttp adds defaults to request options', () => {
   })
 })
 
+test('configureHttp works with request object', () => {
+  const myHttp = configureHttp({ credentials: 'foo' })
+  return myHttp({ url: successUrl, mode: 'bar' }).then((res) => {
+    expect(res.credentials).toEqual('foo')
+    expect(res.mode).toEqual('bar')
+  })
+})
+
 test('configureHttp can accept a custom base http', () => {
   const myFirstHttp = configureHttp({ credentials: 'foo' })
   const mySecondHttp = configureHttp({ mode: 'bar' }, myFirstHttp)

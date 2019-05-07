@@ -56,6 +56,12 @@ test('http passes url to request', () => {
   })
 })
 
+test('http can accept a single object argument', () => {
+  return http({ url: successUrl }).then((res) => {
+    expect(res.url).toEqual(successUrl)
+  })
+})
+
 test('http prepends custom root to request', () => {
   const root = 'http://root/api/v1'
   return http(successUrl, {
@@ -91,7 +97,7 @@ test('http `before` is passed request options', () => {
   const before = jest.fn()
   const myOptions = { my: 'options' }
   return http(successUrl, { before, ...myOptions }).then(() => {
-    expect(before).toHaveBeenCalledWith({ endpoint: successUrl, ...myOptions })
+    expect(before).toHaveBeenCalledWith({ url: successUrl, ...myOptions })
   })
 })
 

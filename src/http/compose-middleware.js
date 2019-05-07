@@ -18,15 +18,15 @@ import { merge } from 'lodash/fp'
  *    if (token) return { bearerToken: token }
  * }
  * 
- * function addPathToEndpoint ({ endpoint }) {
+ * function addPathToUrl ({ url }) {
  *    return {
- *      endpoint: endpoint + '/some-path'
+ *      url: url + '/some-path'
  *    }
  * }
  * 
  * const before = composeMiddleware(
  *    addBearerToken,
- *    addPathToEndpoint,
+ *    addPathToUrl,
  * )
  * 
  * // this will call both middlewares before the request
