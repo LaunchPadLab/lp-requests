@@ -134,8 +134,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
 -   `query`: An object that will be transformed into a query string and appended to the request URL.
 -   `overrideHeaders`: A boolean flag indicating whether or not default headers should be included in the request (default=`false`).
--   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`).
--   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`).
+-   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`). The helper function that does this is also exported from this library as `camelizeKeys`.
+-   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`). The helper function that does this is also exported from this library as `decamelizeKeys`.
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
 -   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][27], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
