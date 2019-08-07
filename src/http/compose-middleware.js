@@ -1,5 +1,5 @@
 import { ensureAsync, asyncReduce } from '../utils'
-import { merge } from 'lodash/fp'
+import { assign } from 'lodash/fp'
 
 /**
  *
@@ -44,7 +44,7 @@ function composeMiddleware (...middlewares) {
       asyncMiddlewares,
       async (acc, middleware) => {
         const result = await middleware(acc)
-        return merge(acc, result || {})
+        return assign(acc, result || {})
       },
       initialValue
     )
