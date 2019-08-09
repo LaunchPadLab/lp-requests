@@ -29,14 +29,15 @@
     "lib/"
   ],
   "devDependencies": {
-    "@launchpadlab/babel-preset": "^1.0.0",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@launchpadlab/babel-preset": "^2.1.0",
     "@launchpadlab/eslint-config": "^2.2.3",
-    "babel-cli": "^6.22.2",
     "codeclimate-test-reporter": "^0.5.0",
-    "documentation": "^8.0.0",
-    "eslint": "^4.12.1",
-    "husky": "^0.14.3",
-    "jest": "^21.2.1",
+    "documentation": "^12.1.1",
+    "eslint": "^6.1.0",
+    "husky": "^3.0.3",
+    "jest": "^24.8.0",
     "rimraf": "^2.5.4"
   },
   "dependencies": {

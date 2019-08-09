@@ -10,10 +10,10 @@
 -   [configureHttp][6]
     -   [Parameters][7]
     -   [Examples][8]
--   [http][9]
+-   [composeMiddleware][9]
     -   [Parameters][10]
     -   [Examples][11]
--   [composeMiddleware][12]
+-   [http][12]
     -   [Parameters][13]
     -   [Examples][14]
 -   [HttpError][15]
@@ -101,6 +101,40 @@ myHttp('/thing', { method: 'GET' }) // A cors request will be made to "http://ex
 
 Returns **[Object][26]** A configured http instance
 
+## composeMiddleware
+
+A utility function that composes multiple request middlewares into a single function.
+This can be used to create more complex `before` hooks for [http][23].
+
+### Parameters
+
+-   `middlewares` **...[Function][27]** Functions that receive and return request options
+
+### Examples
+
+```javascript
+function addBearerToken () {
+   const token = getTokenFromStorage()
+   if (token) return { bearerToken: token }
+}
+
+function addPathToUrl ({ url }) {
+   return {
+     url: url + '/some-path'
+   }
+}
+
+const before = composeMiddleware(
+   addBearerToken,
+   addPathToUrl,
+)
+
+// this will call both middlewares before the request
+http('/users', { before })
+```
+
+Returns **[Function][27]** A composed middleware function
+
 ## http
 
 A wrapper function for the [Fetch API][24]
@@ -137,7 +171,7 @@ In addition to the normal Fetch API settings, the config object may also contain
 -   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`). The helper function that does this is also exported from this library as `camelizeKeys`.
 -   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`). The helper function that does this is also exported from this library as `decamelizeKeys`.
 -   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
--   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][27], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
+-   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
 ### Parameters
 
@@ -164,41 +198,7 @@ function getUsers () {
 }
 ```
 
-Returns **[Promise][28]** A Promise that either resolves with the response or rejects with an [HttpError][15].
-
-## composeMiddleware
-
-A utility function that composes multiple request middlewares into a single function.
-This can be used to create more complex `before` hooks for [http][23].
-
-### Parameters
-
--   `middlewares` **...[Function][29]** Functions that receive and return request options
-
-### Examples
-
-```javascript
-function addBearerToken () {
-   const token = getTokenFromStorage()
-   if (token) return { bearerToken: token }
-}
-
-function addPathToUrl ({ url }) {
-   return {
-     url: url + '/some-path'
-   }
-}
-
-const before = composeMiddleware(
-   addBearerToken,
-   addPathToUrl,
-)
-
-// this will call both middlewares before the request
-http('/users', { before })
-```
-
-Returns **[Function][29]** A composed middleware function
+Returns **[Promise][29]** A Promise that either resolves with the response or rejects with an [HttpError][15].
 
 ## HttpError
 
@@ -318,13 +318,13 @@ Returns **[String][32]**
 
 [8]: #examples-2
 
-[9]: #http
+[9]: #composemiddleware
 
 [10]: #parameters-2
 
 [11]: #examples-3
 
-[12]: #composemiddleware
+[12]: #http
 
 [13]: #parameters-3
 
@@ -354,11 +354,11 @@ Returns **[String][32]**
 
 [26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[27]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
+[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[28]: https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
 [30]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
 
