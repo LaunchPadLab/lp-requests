@@ -84,6 +84,19 @@ export function parseArguments (...args) {
   return { ...options, url: firstArg }
 }
 
+// Default to pulling out JSON
+async function getResponseBody (response) {
+  // Don't parse empty body
+  if (response.headers.get('Content-Length') === '0') return null
+  try {
+    return await response.json()
+  } catch (e) {
+    // eslint-disable-next-line
+    console.warn('Failed to parse response body: ' + e, response)
+    return null
+  }
+}
+
 async function http (...args) {
 
   const { 
@@ -116,9 +129,9 @@ async function http (...args) {
   try {
     // Make request
     const response = await fetch(url, fetchOptions)
-    const json = __mock_response || await response.json()
     // Parse the response
-    const data = camelizeResponse ? camelizeKeys(json) : json
+    const body = __mock_response || await getResponseBody(response)
+    const data = camelizeResponse ? camelizeKeys(body) : body
     if (response.ok) return onSuccess(getDataAtPath(data, successDataPath))
     const errors = getDataAtPath(data, failureDataPath)
     throw new HttpError(response.status, response.statusText, data, errors)
