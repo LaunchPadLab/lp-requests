@@ -84,7 +84,7 @@ export function parseArguments (...args) {
   return { ...options, url: firstArg }
 }
 
-// Default to pulling out JSON
+// Get JSON from response
 async function getResponseBody (response) {
   // Don't parse empty body
   if (response.headers.get('Content-Length') === '0') return null
