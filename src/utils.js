@@ -14,6 +14,7 @@ export { default as compose } from 'lodash/fp/compose'
 export { default as noop } from 'lodash/noop'
 export { default as union } from 'lodash/union'
 export { default as isString } from 'lodash/isString'
+export { default as isError } from 'lodash/isError'
 
 // A wrapper around the humps library
 // Converts all keys of the given object to camelCase
@@ -77,4 +78,14 @@ export async function asyncReduce (array, handler, initialValue) {
     result = await handler(result, value)
   }
   return result
+}
+
+// Async version of lodash attempt()
+// https://lodash.com/docs/4.17.15#attempt
+export async function attemptAsync (func, ...args)  {
+  try {
+    return await func(...args)
+  } catch(e) {
+    return e
+  }
 }

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { camelizeKeys, getDataAtPath, noop, isString } from '../utils'
+import { attemptAsync, isError, camelizeKeys, getDataAtPath, noop, isString } from '../utils'
 import HttpError from '../http-error'
 import composeMiddleware from './compose-middleware'
 import {
@@ -125,19 +125,22 @@ async function http (...args) {
     url,
     fetchOptions,
   } = parsedOptions
-
-  try {
+  // responseData is either the body of the response, or an error object.
+  const responseData = await attemptAsync(async () => {
     // Make request
     const response = await fetch(url, fetchOptions)
     // Parse the response
     const body = __mock_response || await getResponseBody(response)
     const data = camelizeResponse ? camelizeKeys(body) : body
-    if (response.ok) return onSuccess(getDataAtPath(data, successDataPath))
-    const errors = getDataAtPath(data, failureDataPath)
-    throw new HttpError(response.status, response.statusText, data, errors)
-  } catch (e) {
-    throw onFailure(e)
-  }
+    if (!response.ok) {
+      const errors = getDataAtPath(data, failureDataPath)
+      throw new HttpError(response.status, response.statusText, data, errors)
+    }
+    return data
+  })
+  // Handle success and error cases
+  if (isError(responseData)) throw onFailure(responseData)
+  return onSuccess(getDataAtPath(responseData, successDataPath))
 }
 
 export default http

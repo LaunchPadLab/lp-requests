@@ -133,6 +133,15 @@ test('http onFailure hook is called with request result', () => {
   })
 })
 
+test('http onFailure hook is not triggered when an error is thrown in onSuccess', () => {
+  expect.assertions(1)
+  const onSuccess = () => { throw new Error('Oops') }
+  const onFailure = jest.fn()
+  return http(successUrl, { onFailure, onSuccess }).catch(e => {
+    expect(onFailure).not.toHaveBeenCalled()
+  })
+})
+
 test('http onSuccess hook return value used as reject value', () => {
   const NEW_REJECT_VALUE = 'NEW_REJECT_VALUE'
   const onFailure = jest.fn(() => NEW_REJECT_VALUE)
