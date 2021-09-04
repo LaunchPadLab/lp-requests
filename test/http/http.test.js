@@ -1,5 +1,5 @@
 import Base64 from 'Base64'
-import { successUrl, failureUrl } from 'isomorphic-fetch'
+import { successUrl, noContentUrl, failureUrl } from 'isomorphic-fetch'
 import { http } from '../../src'
 
 // These tests rely on the mock Fetch()
@@ -137,7 +137,7 @@ test('http onFailure hook is not triggered when an error is thrown in onSuccess'
   expect.assertions(1)
   const onSuccess = () => { throw new Error('Oops') }
   const onFailure = jest.fn()
-  return http(successUrl, { onFailure, onSuccess }).catch(e => {
+  return http(successUrl, { onFailure, onSuccess }).catch(() => {
     expect(onFailure).not.toHaveBeenCalled()
   })
 })
@@ -287,6 +287,20 @@ test('http sets basic auth header if `auth` is present', () => {
   }).then(res => {
     expect(res.headers.authorization).toEqual(`Basic ${ Base64.btoa(`${ username }:${ password }`) }`)
   })
+})
+
+test('http returns null when content-length is zero', () => {
+  return http(successUrl, { headers: { 'Content-Length': '0' }})
+    .then((res) => {
+      expect(res).toBe(null)
+    })
+})
+
+test('http returns null when the status is 204 (no content)', () => {
+  return http(noContentUrl)
+    .then((res) => {
+      expect(res).toBe(null)
+    })
 })
 
 /* MOCK STUFF */
