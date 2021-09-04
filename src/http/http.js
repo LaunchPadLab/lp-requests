@@ -67,12 +67,12 @@ import {
  * getUsers()
  *    .then(res => console.log('The users are', res))
  *    .catch(err => console.log('An error occurred!', err))
- * 
+ *
  * // Shorthand: pass `url` as first argument:
  * function getUsers () {
  *   return http('/users', options)
  * }
- * 
+ *
  */
 
 // Enable shorthand with optional string `url` first argument.
@@ -85,9 +85,9 @@ export function parseArguments (...args) {
 }
 
 // Get JSON from response
-async function getResponseBody (response) {
+async function getResponseBody(response) {
   // Don't parse empty body
-  if (response.headers.get('Content-Length') === '0') return null
+  if (response.headers.get('Content-Length') === '0' || response.status === 204) return null
   try {
     return await response.json()
   } catch (e) {
@@ -98,13 +98,12 @@ async function getResponseBody (response) {
 }
 
 async function http (...args) {
-
-  const { 
+  const {
     before=noop,
     __mock_response, // used for unit testing
     ...options
   } = parseArguments(...args)
-  
+
   const parsedOptions = await composeMiddleware(
     before,
     setDefaults,
@@ -117,7 +116,7 @@ async function http (...args) {
   )(options)
 
   const {
-    onSuccess, 
+    onSuccess,
     onFailure,
     camelizeResponse,
     successDataPath,
