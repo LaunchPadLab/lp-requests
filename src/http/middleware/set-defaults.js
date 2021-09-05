@@ -3,10 +3,11 @@ import { identity } from '../../utils'
 const DEFAULTS = {
   credentials: 'same-origin',
   mode: 'same-origin',
-  onSuccess: identity, 
+  onSuccess: identity,
   onFailure: identity,
   camelizeResponse: true,
   failureDataPath: 'errors',
+  parseJsonStrictly: true,
 }
 
 const DEFAULT_HEADERS = {

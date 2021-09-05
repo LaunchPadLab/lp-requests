@@ -85,15 +85,20 @@ export function parseArguments (...args) {
 }
 
 // Get JSON from response
-async function getResponseBody(response) {
+async function getResponseBody(response, { parseJsonStrictly }) {
   // Don't parse empty body
   if (response.headers.get('Content-Length') === '0' || response.status === 204) return null
+  let data
   try {
-    return await response.json()
+    data = await response.text()
+    return JSON.parse(data)
   } catch (e) {
-    // eslint-disable-next-line
-    console.warn('Failed to parse response body: ' + e, response)
-    return null
+    if (parseJsonStrictly) {
+      // eslint-disable-next-line
+      console.warn('Failed to parse response body: ' + e, response)
+      return null
+    }
+    return data
   }
 }
 
@@ -123,13 +128,14 @@ async function http (...args) {
     failureDataPath,
     url,
     fetchOptions,
+    parseJsonStrictly,
   } = parsedOptions
   // responseData is either the body of the response, or an error object.
   const responseData = await attemptAsync(async () => {
     // Make request
-    const response = await fetch(url, fetchOptions)
+    const response = __mock_response ?? await fetch(url, fetchOptions)
     // Parse the response
-    const body = __mock_response || await getResponseBody(response)
+    const body = await getResponseBody(response, { parseJsonStrictly })
     const data = camelizeResponse ? camelizeKeys(body) : body
     if (!response.ok) {
       const errors = getDataAtPath(data, failureDataPath)
