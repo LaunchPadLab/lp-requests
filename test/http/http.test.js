@@ -1,5 +1,5 @@
 import Base64 from 'Base64'
-import { successUrl, noContentUrl, failureUrl } from 'isomorphic-fetch'
+import { successUrl, noContentUrl, failureUrl, MockResponse } from 'isomorphic-fetch'
 import { http } from '../../src'
 
 // These tests rely on the mock Fetch()
@@ -81,7 +81,7 @@ test('http modifies fetch configuration using `before` hook', () => {
 
 test('http modifies overall configuration using `before` hook', () => {
   const before = () => ({ successDataPath: 'foo' })
-  return http(successUrl, { before, __mock_response: { foo: 'bar' } }).then((res) => {
+  return httpWithMock(successUrl, { before }, { foo: 'bar' }).then((res) => {
     expect(res).toEqual('bar')
   })
 })
@@ -180,12 +180,11 @@ test('http pulls data from response using successDataPath', () => {
 test('http failureDataPath defaults to "errors"', () => {
   expect.assertions(1)
   const ERRORS = { 'someValue': 'there was an error' }
-  return http(failureUrl, {
+  return httpWithMock(failureUrl, {
     method: 'POST',
-    __mock_response: {
+  }, {
       errors: ERRORS,
-    }
-  }).catch((err) => {
+    }).catch((err) => {
     expect(err.errors).toEqual(ERRORS)
   })
 })
@@ -231,23 +230,21 @@ test('http does not decamelizes query if decamelizeQuery is false', () => {
 })
 
 test('http camelizes json response by default', () => {
-  return http(successUrl, {
+  return httpWithMock(successUrl, {
     method: 'POST',
-    __mock_response: {
+  }, {
       camelized_key: 'a camelized key'
-    },
-  }).then((res) => {
+    }).then((res) => {
     expect(res).toHaveProperty('camelizedKey')
   })
 })
 
-test('http does not camelizes json response if camelize passed as false', () => {
-  return http(successUrl, {
+test('http does not camelize json response if camelize passed as false', () => {
+  return httpWithMock(successUrl, {
     camelizeResponse: false,
-    __mock_response: {
+  }, {
       Capitalized_key: 'a weirdly cased key'
-    }
-  }).then((res) => {
+    }).then((res) => {
     expect(res).toHaveProperty('Capitalized_key')
   })
 })
@@ -303,7 +300,26 @@ test('http returns null when the status is 204 (no content)', () => {
     })
 })
 
+test('http returns null when json parsing fails by default', () => {
+  return httpWithMock(successUrl, {}, "123AZY")
+    .then((res) => {
+      expect(res).toBe(null)
+    })
+})
+
+test('http returns text of body when json parsing fails and parseJsonStrictly is `false`', () => {
+  return httpWithMock(successUrl, { parseJsonStrictly: false }, "123AZY")
+    .then((res) => {
+      expect(res).toBe('123AZY')
+    })
+})
+
 /* MOCK STUFF */
+
+async function httpWithMock(url, options, responseBody) {
+  const mockResponse = new MockResponse(url, options, responseBody)
+  return http(url, { ...options, __mock_response: mockResponse })
+}
 
 // Mock token elements
 const createTokenTag = (name, content) => {

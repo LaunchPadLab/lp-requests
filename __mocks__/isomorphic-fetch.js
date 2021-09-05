@@ -11,22 +11,34 @@ const statuses = {
   [unauthorizedUrl]: 401
 }
 
-export default jest.fn(function (url, options) {
-  const { headers={} } = options
-  const body = { ...options, url }
+export class MockResponse {
+  #text
 
-  const response = {
-    // Response echoes back passed options
-    headers: {
-      get: (header) => {
-        return headers[header]
-      },
-      ...headers,
-    },
-    json: () => Promise.resolve(body),
-    ok: ![failureUrl, unauthorizedUrl].includes(url),
-    status: statuses[url]
+  constructor(url, options, body = null) {
+    const { headers={} } = options
+    this.headers = {
+      get: (header) => headers[header],
+      ...headers
+    }
+    this.body = body ?? { ...options, url }
+    this.ok = ![failureUrl, unauthorizedUrl].includes(url)
+    this.status = statuses[url]
+    this._config = options
+    this.#text = typeof body === 'string' ? body : JSON.stringify(this.body)
   }
+
+  json() {
+    return Promise.resolve(this.body)
+  }
+
+  text() {
+    return Promise.resolve(this.#text)
+  }
+}
+
+export default jest.fn(function fetch(url, options) {
+  const response = new MockResponse(url, options)
+
   // Simulate server response
   return new Promise((resolve, reject) => {
     setTimeout(
