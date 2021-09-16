@@ -89,6 +89,7 @@ export function parseArguments (...args) {
 async function getResponseBody(response, { parseJsonStrictly }) {
   // Don't parse empty body
   if (response.headers.get('Content-Length') === '0' || response.status === 204) return null
+
   let data
   try {
     data = await response.text()
