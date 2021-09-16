@@ -47,6 +47,7 @@ import {
  * - `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`). The helper function that does this is also exported from this library as `camelizeKeys`.
  * - `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`). The helper function that does this is also exported from this library as `decamelizeKeys`.
  * - `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
+ * - `parseJsonStrictly`: A boolean flag indicating whether or not to return the text of the response body if JSON parsing fails (default=`true`). If set to `true` and invalid JSON is received in the response, then `null` will be returned instead.
  * - `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side), adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
  *
  * @name http
@@ -85,15 +86,21 @@ export function parseArguments (...args) {
 }
 
 // Get JSON from response
-async function getResponseBody(response) {
+async function getResponseBody(response, { parseJsonStrictly }) {
   // Don't parse empty body
   if (response.headers.get('Content-Length') === '0' || response.status === 204) return null
+
+  let data
   try {
-    return await response.json()
+    data = await response.text()
+    return JSON.parse(data)
   } catch (e) {
-    // eslint-disable-next-line
-    console.warn('Failed to parse response body: ' + e, response)
-    return null
+    if (parseJsonStrictly) {
+      // eslint-disable-next-line
+      console.warn('Failed to parse response body: ' + e, response)
+      return null
+    }
+    return data
   }
 }
 
@@ -123,13 +130,14 @@ async function http (...args) {
     failureDataPath,
     url,
     fetchOptions,
+    parseJsonStrictly,
   } = parsedOptions
   // responseData is either the body of the response, or an error object.
   const responseData = await attemptAsync(async () => {
     // Make request
-    const response = await fetch(url, fetchOptions)
+    const response = __mock_response ?? await fetch(url, fetchOptions)
     // Parse the response
-    const body = __mock_response || await getResponseBody(response)
+    const body = await getResponseBody(response, { parseJsonStrictly })
     const data = camelizeResponse ? camelizeKeys(body) : body
     if (!response.ok) {
       const errors = getDataAtPath(data, failureDataPath)
