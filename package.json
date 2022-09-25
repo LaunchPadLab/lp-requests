@@ -35,7 +35,7 @@
     "@launchpadlab/babel-preset": "^2.1.0",
     "@launchpadlab/eslint-config": "^2.2.3",
     "codeclimate-test-reporter": "^0.5.0",
-    "documentation": "^12.1.1",
+    "documentation": "^14.0.0",
     "eslint": "^6.1.0",
     "husky": "^3.0.3",
     "jest": "^24.8.0"
