@@ -14,16 +14,16 @@ test('getAuthenticationContext returns undefined when lp_auth cookie is set to a
 })
 
 test('getAuthenticationContext returns undefined when lp_auth cookie does not contain a token', () => {
-  Cookies.set('lp_auth', {})
+  Cookies.set('lp_auth', JSON.stringify({}))
   expect(getAuthenticationContext()).toEqual(undefined)
 })
 
 test('getAuthenticationContext returns undefined when lp_auth cookie contains an invalid token', () => {
-  Cookies.set('lp_auth', { token: false, context: CONTEXT })
+  Cookies.set('lp_auth', JSON.stringify({ token: false, context: CONTEXT }))
   expect(getAuthenticationContext()).toEqual(undefined)
 })
 
 test('getAuthenticationContext returns the context string when lp_auth cookie contains a valid context', () => {
-  Cookies.set('lp_auth', { token: true, context: CONTEXT })
+  Cookies.set('lp_auth', JSON.stringify({ token: true, context: CONTEXT }))
   expect(getAuthenticationContext()).toEqual(CONTEXT)
 })
