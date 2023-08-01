@@ -47,3 +47,8 @@ test('isAuthenticated returns true when the lp_auth cookie is valid and the opti
   Cookies.set('lp_auth', { token: true })
   expect(isAuthenticated({ foo: 'bar' })).toEqual(true)
 })
+
+test('isAuthenticated returns false when lp_auth cookie is empty', () => {
+  Cookies.set('lp_auth', null)
+  expect(isAuthenticated({ context: 'foo' })).toEqual(false)
+})

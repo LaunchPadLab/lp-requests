@@ -111,6 +111,10 @@ async function http (...args) {
     ...options
   } = parseArguments(...args)
 
+  if (!options.url) {
+    throw new Error('`url` option cannot be empty')
+  }
+
   const parsedOptions = await composeMiddleware(
     before,
     setDefaults,
@@ -132,6 +136,7 @@ async function http (...args) {
     fetchOptions,
     parseJsonStrictly,
   } = parsedOptions
+
   // responseData is either the body of the response, or an error object.
   const responseData = await attemptAsync(async () => {
     // Make request
