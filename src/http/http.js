@@ -51,7 +51,7 @@ import {
  * - `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication#Client_side), adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
  *
  * @name http
- * @type Function
+ * @type {Function}
  * @param {Object} config - An object containing config information for the `Fetch` request, as well as the extra keys noted above.
  * @returns {Promise} A Promise that either resolves with the response or rejects with an {@link HttpError}.
  *

@@ -174,6 +174,8 @@ In addition to the normal Fetch API settings, the config object may also contain
 *   `parseJsonStrictly`: A boolean flag indicating whether or not to return the text of the response body if JSON parsing fails (default=`true`). If set to `true` and invalid JSON is received in the response, then `null` will be returned instead.
 *   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
 
+Type: [Function][27]
+
 ### Parameters
 
 *   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
@@ -237,13 +239,10 @@ http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 A helper function to determine if the current user is authenticated.
 This function accepts an object argument with a `context` key.
 
-This returns true when the LP Auth Api cookie exists and contains a
-token.
-If the `context` key is present, this function returns true if the user is
-both authenticated and the specified context is present.
+*Note, this does not **validate** the token, it only checks for
+presence, validation must be done on the server.*
 
-Note, this does not **validate** the token, it only checks for
-presence, validation must be done on the server.
+Type: [Function][27]
 
 ### Parameters
 
@@ -273,18 +272,14 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean][33]**&#x20;
+Returns **[Boolean][33]** True when the LP Auth Api cookie exists and contains a token.
+If the `context` key is present, this function returns true if the user is
+both authenticated and the specified context is present.
 
 ## getAuthenticationContext
 
 A helper function to retrieve the authentication context for the
 authenticated user.
-
-This function returns the context string when the LP Auth Api cookie exists,
-contains a valid token, and contains a context.
-
-This function returns `undefined` when there is no context present,
-or if the LP Auth API cookie does not exist.
 
 ### Examples
 
@@ -297,11 +292,9 @@ getAuthenticationContext() // undefined
 
 // After sign out
 getAuthenticationContext() // undefined
-
-*
 ```
 
-Returns **[String][32]**&#x20;
+Returns **([String][32] | [Undefined][34])** The context string when the LP Auth Api cookie exists, contains a valid token, and contains a context. Returns `undefined` when there is no context present, or if the LP Auth API cookie does not exist.
 
 [1]: #api
 
@@ -368,3 +361,5 @@ Returns **[String][32]**&#x20;
 [32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
 [33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined

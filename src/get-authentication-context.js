@@ -4,13 +4,10 @@ import { getLpAuthCookie, parseObject } from './utils'
  * A helper function to retrieve the authentication context for the
  * authenticated user.
  *
- * This function returns the context string when the LP Auth Api cookie exists,
- * contains a valid token, and contains a context.
+ * @name getAuthenticationContext
+ * @type Function
+ * @returns {String|Undefined} The context string when the LP Auth Api cookie exists, contains a valid token, and contains a context. Returns `undefined` when there is no context present, or if the LP Auth API cookie does not exist.
  *
- * This function returns `undefined` when there is no context present,
- * or if the LP Auth API cookie does not exist.
- *
- * @returns {String}
  * @example
  *
  * // After an 'admin' signs in
@@ -22,7 +19,7 @@ import { getLpAuthCookie, parseObject } from './utils'
  * // After sign out
  * getAuthenticationContext() // undefined
  *
-**/
+ */
 
 export default function getAuthenticationContext () {
   const lpAuthCookie = getLpAuthCookie()
