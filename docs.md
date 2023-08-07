@@ -2,28 +2,28 @@
 
 ### Table of Contents
 
--   [api][1]
-    -   [Examples][2]
--   [configureApi][3]
-    -   [Parameters][4]
-    -   [Examples][5]
--   [configureHttp][6]
-    -   [Parameters][7]
-    -   [Examples][8]
--   [composeMiddleware][9]
-    -   [Parameters][10]
-    -   [Examples][11]
--   [http][12]
-    -   [Parameters][13]
-    -   [Examples][14]
--   [HttpError][15]
-    -   [Parameters][16]
-    -   [Examples][17]
--   [isAuthenticated][18]
-    -   [Parameters][19]
-    -   [Examples][20]
--   [getAuthenticationContext][21]
-    -   [Examples][22]
+*   [api][1]
+    *   [Examples][2]
+*   [configureApi][3]
+    *   [Parameters][4]
+    *   [Examples][5]
+*   [configureHttp][6]
+    *   [Parameters][7]
+    *   [Examples][8]
+*   [composeMiddleware][9]
+    *   [Parameters][10]
+    *   [Examples][11]
+*   [http][12]
+    *   [Parameters][13]
+    *   [Examples][14]
+*   [HttpError][15]
+    *   [Parameters][16]
+    *   [Examples][17]
+*   [isAuthenticated][18]
+    *   [Parameters][19]
+    *   [Examples][20]
+*   [getAuthenticationContext][21]
+    *   [Examples][22]
 
 ## api
 
@@ -32,12 +32,12 @@ Provides functions to make API requests with specified HTTP methods.
 
 The functions are as follows:
 
--   `get(url, options)` sends a `'GET'` request
--   `patch(url, body, options)` sends a `'PATCH'` request
--   `post(url, body, options)` sends a `'POST'` request
--   `put(url, body, options)` sends a `'PUT'` request
--   `destroy(url, body, options)` sends a `'DELETE'` request
--   `call(url, method, body, options)` sends a request with specified method
+*   `get(url, options)` sends a `'GET'` request
+*   `patch(url, body, options)` sends a `'PATCH'` request
+*   `post(url, body, options)` sends a `'POST'` request
+*   `put(url, body, options)` sends a `'PUT'` request
+*   `destroy(url, body, options)` sends a `'DELETE'` request
+*   `call(url, method, body, options)` sends a request with specified method
 
 Each function can be passed an `options` object, which will eventually be forwarded
 to the [Fetch API][24].
@@ -66,8 +66,8 @@ Note: This configuration can always be overridden by passing in options manually
 
 ### Parameters
 
--   `config` **[Object][26]** An api configuration object
--   `baseApi` **[Object][26]?** An existing api instance to extend with the configuration
+*   `config` **[Object][26]** An api configuration object
+*   `baseApi` **[Object][26]?** An existing api instance to extend with the configuration
 
 ### Examples
 
@@ -88,8 +88,8 @@ Note: This configuration can always be overridden by passing in options manually
 
 ### Parameters
 
--   `config` **[Object][26]** An http configuration object
--   `baseHttp` **[Object][26]?** An existing http instance to extend with the configuration
+*   `config` **[Object][26]** An http configuration object
+*   `baseHttp` **[Object][26]?** An existing http instance to extend with the configuration
 
 ### Examples
 
@@ -108,7 +108,7 @@ This can be used to create more complex `before` hooks for [http][23].
 
 ### Parameters
 
--   `middlewares` **...[Function][27]** Functions that receive and return request options
+*   `middlewares` **...[Function][27]** Functions that receive and return request options
 
 ### Examples
 
@@ -156,27 +156,29 @@ Any one of these settings can be overriden using the passed-in config object.
 
 In addition to the normal Fetch API settings, the config object may also contain these special settings just for `http`:
 
--   `url`: The url for the request. This can also be passed in directly as the first argument (see shorthand example).
--   `root`: A path to be appended to the given url (default=`''`).
--   `crsf`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
--   `before`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
-     It can also return a promise that resolves to a new options object.
--   `bearerToken`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
--   `onSuccess`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
--   `onFailure`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
--   `successDataPath`: A path to response data that the promise will resolve with.
--   `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
--   `query`: An object that will be transformed into a query string and appended to the request URL.
--   `overrideHeaders`: A boolean flag indicating whether or not default headers should be included in the request (default=`false`).
--   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`). The helper function that does this is also exported from this library as `camelizeKeys`.
--   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`). The helper function that does this is also exported from this library as `decamelizeKeys`.
--   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
--   `parseJsonStrictly`: A boolean flag indicating whether or not to return the text of the response body if JSON parsing fails (default=`true`). If set to `true` and invalid JSON is received in the response, then `null` will be returned instead.
--   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
+*   `url`: The url for the request. This can also be passed in directly as the first argument (see shorthand example).
+*   `root`: A path to be appended to the given url (default=`''`).
+*   `crsf`: The name of the `meta` tag containing the CSRF token (default=`'csrf-token'`). This can be set to `false` to prevent a token from being sent.
+*   `before`: A function that's called before the request executes. This function is passed the request options and its return value will be added to those options.
+    It can also return a promise that resolves to a new options object.
+*   `bearerToken`: A token to use for bearer auth. If provided, `http` will add the header `"Authorization": "Bearer <bearerToken>"` to the request.
+*   `onSuccess`: A function that will be called if the request succeeds. It will be passed the successful response. If it returns a value, `http` will resolve with this value instead of the response.
+*   `onFailure`: A function that will be called if the request fails. It will be passed the error that was thrown during the request. If it returns a value, `http` will reject with this value instead of the default error.
+*   `successDataPath`: A path to response data that the promise will resolve with.
+*   `failureDataPath`: A path to the errors that will be included in the HttpError object (default=`'errors'`)
+*   `query`: An object that will be transformed into a query string and appended to the request URL.
+*   `overrideHeaders`: A boolean flag indicating whether or not default headers should be included in the request (default=`false`).
+*   `camelizeResponse`: A boolean flag indicating whether or not to camelize the response keys (default=`true`). The helper function that does this is also exported from this library as `camelizeKeys`.
+*   `decamelizeBody`: A boolean flag indicating whether or not to decamelize the body keys (default=`true`). The helper function that does this is also exported from this library as `decamelizeKeys`.
+*   `decamelizeQuery`: A boolean flag indicating whether or not to decamelize the query string keys (default=`true`).
+*   `parseJsonStrictly`: A boolean flag indicating whether or not to return the text of the response body if JSON parsing fails (default=`true`). If set to `true` and invalid JSON is received in the response, then `null` will be returned instead.
+*   `auth`: An object with the following keys `{ username, password }`. If present, `http` will use [basic auth][28], adding the header `"Authorization": "Basic <authToken>"` to the request, where `<authToken>` is a base64 encoded string of `username:password`.
+
+Type: [Function][27]
 
 ### Parameters
 
--   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
+*   `config` **[Object][26]** An object containing config information for the `Fetch` request, as well as the extra keys noted above.
 
 ### Examples
 
@@ -209,17 +211,17 @@ An error class that is thrown by the [http][23] module when a request fails.
 
 In addition to the standard [Error][30] attributes, instances of `HttpError` include the following:
 
--   `status`: the status code of the response
--   `statusText`: the status text of the response
--   `response`: the full response object
--   `message`: A readable error message with format `<status> - <statusText>`
+*   `status`: the status code of the response
+*   `statusText`: the status text of the response
+*   `response`: the full response object
+*   `message`: A readable error message with format `<status> - <statusText>`
 
 ### Parameters
 
--   `status` **[Number][31]** the status code of the response
--   `statusText` **[String][32]** the status text of the response
--   `response` **[Object][26]** the full response object
--   `errors` **[Object][26]** an object containing error messages associated with the response (optional, default `{}`)
+*   `status` **[Number][31]** the status code of the response
+*   `statusText` **[String][32]** the status text of the response
+*   `response` **[Object][26]** the full response object
+*   `errors` **[Object][26]** an object containing error messages associated with the response (optional, default `{}`)
 
 ### Examples
 
@@ -237,17 +239,14 @@ http('/bad-route').catch(err => console.log(err.name)) // -> "HttpError"
 A helper function to determine if the current user is authenticated.
 This function accepts an object argument with a `context` key.
 
-This returns true when the LP Auth Api cookie exists and contains a
-token.
-If the `context` key is present, this function returns true if the user is
-both authenticated and the specified context is present.
+*Note, this does not **validate** the token, it only checks for
+presence, validation must be done on the server.*
 
-Note, this does not **validate** the token, it only checks for
-presence, validation must be done on the server.
+Type: [Function][27]
 
 ### Parameters
 
--   `options` **[Object][26]** config object containing the context (optional, default `{}`)
+*   `options` **[Object][26]** config object containing the context (optional, default `{}`)
 
 ### Examples
 
@@ -273,18 +272,14 @@ isAuthenticated({ context: 'admin' }) // false
 isAuthenticated({ context: 'non-admin' }) // false
 ```
 
-Returns **[Boolean][33]** 
+Returns **[Boolean][33]** True when the LP Auth Api cookie exists and contains a token.
+If the `context` key is present, this function returns true if the user is
+both authenticated and the specified context is present.
 
 ## getAuthenticationContext
 
-A helper function to retrieve the authentication context for the 
+A helper function to retrieve the authentication context for the
 authenticated user.
-
-This function returns the context string when the LP Auth Api cookie exists, 
-contains a valid token, and contains a context.
-
-This function returns `undefined` when there is no context present,
-or if the LP Auth API cookie does not exist.
 
 ### Examples
 
@@ -293,15 +288,13 @@ or if the LP Auth API cookie does not exist.
 getAuthenticationContext() // 'admin'
 
 // After a user with no context signs in
-getAuthenticationContext() // undefined 
+getAuthenticationContext() // undefined
 
 // After sign out
 getAuthenticationContext() // undefined
-
-*
 ```
 
-Returns **[String][32]** 
+Returns **([String][32] | [Undefined][34])** The context string when the LP Auth Api cookie exists, contains a valid token, and contains a context. Returns `undefined` when there is no context present, or if the LP Auth API cookie does not exist.
 
 [1]: #api
 
@@ -368,3 +361,5 @@ Returns **[String][32]**
 [32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
 [33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined

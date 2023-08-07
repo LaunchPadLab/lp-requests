@@ -50,6 +50,19 @@ test('http adds custom CSRF token to request', () => {
   })
 })
 
+test('http does not add attempt to CSRF token on the server', () => {
+  const spyDocument = jest.spyOn(global, 'document', 'get')
+  spyDocument.mockImplementation(() => undefined)
+
+  return http(successUrl, {
+    method: 'POST',
+    csrf: CUSTOM_TAG_NAME
+  }).then((res) => {
+    expect(res.headers.xCSRFToken).toEqual(undefined)
+    spyDocument.mockRestore()
+  })
+})
+
 test('http passes url to request', () => {
   return http(successUrl).then((res) => {
     expect(res.url).toEqual(successUrl)
@@ -60,6 +73,12 @@ test('http can accept a single object argument', () => {
   return http({ url: successUrl }).then((res) => {
     expect(res.url).toEqual(successUrl)
   })
+})
+
+test('http throws an error if `url` is not provided', async () => {
+  await expect(http()).rejects.toThrow()
+  await expect(http("", {})).rejects.toThrow()
+  await expect(http({ url : null })).rejects.toThrow()
 })
 
 test('http prepends custom root to request', () => {
@@ -283,6 +302,16 @@ test('http sets basic auth header if `auth` is present', () => {
     }
   }).then(res => {
     expect(res.headers.authorization).toEqual(`Basic ${ Base64.btoa(`${ username }:${ password }`) }`)
+  })
+})
+
+// Note: this isn't recommended and is super insecure, but technically the HTTP spec does allow it
+test('http sets basic auth, even if username and password are not provided', () => {
+  return http(successUrl, {
+    method: 'POST',
+    auth: {},
+  }).then(res => {
+    expect(res.headers.authorization).toEqual(`Basic ${Base64.btoa(':')}`)
   })
 })
 
