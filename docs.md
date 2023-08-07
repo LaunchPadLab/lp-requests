@@ -293,7 +293,7 @@ or if the LP Auth API cookie does not exist.
 getAuthenticationContext() // 'admin'
 
 // After a user with no context signs in
-getAuthenticationContext() // undefined 
+getAuthenticationContext() // undefined
 
 // After sign out
 getAuthenticationContext() // undefined
