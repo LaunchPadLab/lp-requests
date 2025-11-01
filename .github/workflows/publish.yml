@@ -12,7 +12,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
           scope: '@launchpadlab'
       - name: Install dependencies
