@@ -37,8 +37,8 @@
     "documentation": "^14.0.2",
     "eslint": "^8.46.0",
     "husky": "^8.0.0",
-    "jest": "^29.6.2",
-    "jest-environment-jsdom": "^29.6.2"
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0"
   },
   "dependencies": {
     "Base64": "^1.0.1",
